@@ -1,0 +1,501 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros with context %}
+
+{% block title %}AFAQ | Discover Riyadh Events{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .hero {
+    position: relative;
+    background: var(--ink);
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 40px;
+    min-height: 78vh;
+    padding: 70px 0 60px;
+  }
+
+  .hero-content .eyebrow-label {
+    margin-bottom: 26px;
+  }
+
+  .hero-content h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 1.02;
+    letter-spacing: -2px;
+    color: var(--text-on-ink);
+    font-weight: 800;
+    margin-bottom: 26px;
+  }
+
+  .hero-content h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-content p {
+    font-size: 1.08rem;
+    line-height: 1.8;
+    color: var(--text-on-ink-soft);
+    max-width: 520px;
+    margin-bottom: 34px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .hero-graphic {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .hero-graphic img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .hero-scroll-cue {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-scroll-cue span {
+    font-size: 0.76rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-on-ink-soft);
+    border-bottom: 1px solid var(--border-on-ink);
+    padding-bottom: 6px;
+  }
+
+  .marquee-strip {
+    background: var(--accent);
+    overflow: hidden;
+    padding: 14px 0;
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 48px;
+    white-space: nowrap;
+    animation: marquee 26s linear infinite;
+    width: max-content;
+  }
+
+  .marquee-track span {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--text-on-accent);
+    letter-spacing: 0.4px;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+
+  .feature-strip-section {
+    padding: 64px 0 24px;
+    background: var(--paper);
+  }
+
+  .feature-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .split-section {
+    background: var(--paper);
+    padding: 88px 0;
+  }
+
+  .split-inner {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  .split-inner .eyebrow-label {
+    margin-bottom: 20px;
+  }
+
+  .split-inner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+    color: var(--text-main);
+  }
+
+  .split-inner p {
+    color: var(--text-soft);
+    line-height: 1.85;
+    font-size: 1.02rem;
+    max-width: 440px;
+  }
+
+  .stat-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    padding: 26px 22px;
+    box-shadow: var(--shadow);
+  }
+
+  .stat-card strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    color: var(--accent-dark);
+    margin-bottom: 6px;
+  }
+
+  .stat-card span {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .top-rated-section {
+    position: relative;
+    padding: 90px 0 96px;
+    background: var(--ink);
+    overflow: hidden;
+  }
+
+  .top-rated-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("{{ url_for('static', filename='images/texture-grid.svg') }}");
+    background-repeat: repeat;
+    background-size: 64px 64px;
+    pointer-events: none;
+  }
+
+  .top-rated-section .page-shell {
+    position: relative;
+  }
+
+  .top-rated-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 34px;
+    flex-wrap: wrap;
+  }
+
+  .top-rated-heading h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    color: var(--text-on-ink);
+    margin-top: 14px;
+  }
+
+  .top-rated-heading p {
+    max-width: 480px;
+    color: var(--text-on-ink-soft);
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  .top-rated-rank {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--ink);
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.86rem;
+  }
+
+  .top-rated-empty {
+    background: rgba(245, 242, 235, 0.06);
+    border: 1px dashed var(--border-on-ink);
+    color: var(--text-on-ink-soft);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      padding: 56px 0 48px;
+      text-align: center;
+      min-height: auto;
+    }
+
+    .hero-content p {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-buttons {
+      justify-content: center;
+    }
+
+    .hero-graphic {
+      order: -1;
+      max-width: 300px;
+    }
+
+    .hero-scroll-cue {
+      display: none;
+    }
+
+    .split-inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .feature-strip {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .stat-list {
+      grid-template-columns: 1fr;
+    }
+
+    .top-rated-heading {
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero" id="home">
+  <div class="page-shell hero-inner">
+    <div class="hero-content">
+      <span class="eyebrow-label on-ink">Riyadh event discovery</span>
+      <h1>Every Riyadh experience, <em>one clear view.</em></h1>
+      <p>
+        AFAQ brings together a wide range of activities, allowing you to easily browse, search, and access event information through a clear and organized experience.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="{{ url_for('events.events_page') }}" class="solid-btn">Explore events</a>
+        <a href="#about" class="outline-btn" style="border-color: var(--border-on-ink); color: var(--text-on-ink);">About AFAQ</a>
+      </div>
+    </div>
+
+    <div class="hero-graphic">
+      <img src="{{ url_for('static', filename='images/hero-identity.svg') }}" alt="AFAQ — an abstract radar of events across Riyadh">
+    </div>
+  </div>
+
+  <div class="hero-scroll-cue">
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Culture</span><span>Music</span><span>Food &amp; drink</span><span>Sports</span><span>Exhibitions</span><span>Family</span>
+    <span>Culture</span><span>Music</span><span>Food &amp; drink</span><span>Sports</span><span>Exhibitions</span><span>Family</span>
+  </div>
+</div>
+
+<section class="feature-strip-section">
+  <div class="page-shell">
+    <div class="feature-strip">
+      <div class="feature-block">
+        <span class="feature-icon">01 &mdash; Discover</span>
+        <h3>Explore Riyadh</h3>
+        <p>Browse a wide range of events happening across the city, gathered in one unified platform.</p>
+      </div>
+      <div class="feature-block">
+        <span class="feature-icon">02 &mdash; Personalize</span>
+        <h3>Made for your taste</h3>
+        <p>Get suggestions and a browsing experience tailored to your interests.</p>
+      </div>
+      <div class="feature-block">
+        <span class="feature-icon">03 &mdash; Plan</span>
+        <h3>Track what matters</h3>
+        <p>Keep track of the events you care about and plan your schedule with ease.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if current_user.is_authenticated and recommended_events %}
+<section class="section" id="recommended">
+  <div class="page-shell">
+    <div class="section-header">
+      <div>
+        <span class="eyebrow-label">Picked for you</span>
+        <h2 style="margin-top: 14px;">Recommended for you</h2>
+      </div>
+    </div>
+
+    <div class="events-grid">
+      {% for event in recommended_events %}
+        {{ macros.event_card(
+          event,
+          badge_text=event.category,
+          meta_text=event.start_date ~ ' · ' ~ event.city,
+          avg_rating=(event_ratings[event.id].avg if event_ratings and event.id in event_ratings else None),
+          is_favorited=(event.id in favorited_event_ids)
+        ) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if events %}
+<section class="split-section" id="featured">
+  <div class="page-shell">
+    <div class="section-header">
+      <div>
+        <span class="eyebrow-label">Happening now</span>
+        <h2 style="margin-top: 14px;">Featured events</h2>
+      </div>
+      <a href="{{ url_for('events.events_page') }}" class="outline-btn">View all events</a>
+    </div>
+
+    <div class="events-grid">
+      {% for event in events %}
+        {{ macros.event_card(
+          event,
+          badge_text=event.category,
+          meta_text=event.start_date ~ ' \u00b7 ' ~ event.city,
+          avg_rating=(event_ratings[event.id].avg if event_ratings and event.id in event_ratings else None),
+          is_favorited=(event.id in favorited_event_ids)
+        ) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if ending_today_events %}
+<section class="section" id="ending-today">
+  <div class="page-shell">
+    <div class="section-header">
+      <div>
+        <span class="eyebrow-label">Don't miss out</span>
+        <h2 style="margin-top: 12px;">Ending today</h2>
+      </div>
+    </div>
+
+    <div class="events-grid">
+      {% for event in ending_today_events %}
+        {{ macros.event_card(
+          event,
+          badge_text=event.category,
+          meta_text='Ends today \u00b7 ' ~ event.city,
+          avg_rating=(event_ratings[event.id].avg if event_ratings and event.id in event_ratings else None),
+          is_favorited=(event.id in favorited_event_ids)
+        ) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="top-rated-section" id="top-rated">
+  <div class="page-shell">
+    <div class="top-rated-heading">
+      <div>
+        <span class="eyebrow-label on-ink">User favorites</span>
+        <h2>Top rated events</h2>
+        <p>Discover the highest-rated Riyadh events based on user feedback and ratings.</p>
+      </div>
+    </div>
+
+    {% if top_rated_events %}
+      <div class="events-grid">
+        {% for item in top_rated_events %}
+          {{ macros.event_card(
+            item.event,
+            badge_text=item.event.category,
+            meta_text=item.event.category ~ ' \u00b7 ' ~ item.ratings_count ~ (' rating' if item.ratings_count == 1 else ' ratings'),
+            avg_rating=item.avg_rating,
+            is_favorited=(item.event.id in favorited_event_ids),
+            rank=loop.index
+          ) }}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="top-rated-empty">
+        No rated events yet. Once users rate events, the top 3 will appear here automatically.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="split-section" id="about">
+  <div class="page-shell split-inner">
+    <div>
+      <span class="eyebrow-label">About AFAQ</span>
+      <h2>Built to simplify event discovery in Riyadh</h2>
+      <p>
+        AFAQ brings scattered event information into one unified and engaging platform &mdash; recommending events based on your interests, and helping you organize what you plan to attend, without switching between multiple sources.
+      </p>
+    </div>
+
+    <div class="stat-list">
+      <div class="stat-card">
+        <strong>One platform</strong>
+        <span>Culture, food, sports and more, gathered in a single organized view.</span>
+      </div>
+      <div class="stat-card">
+        <strong>Clear details</strong>
+        <span>Dates, locations and descriptions presented consistently across every event.</span>
+      </div>
+      <div class="stat-card">
+        <strong>Community rated</strong>
+        <span>Real ratings and reviews from people who attended.</span>
+      </div>
+      <div class="stat-card">
+        <strong>Riyadh-first</strong>
+        <span>Built specifically around what's happening in the city.</span>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

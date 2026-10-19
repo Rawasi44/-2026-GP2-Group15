@@ -1,0 +1,894 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Schedule | AFAQ{% endblock %}
+
+
+{% block extra_styles %}
+<style>
+  .smart-hero {
+    position: relative;
+    background: var(--ink);
+    padding: 58px 0 50px;
+    overflow: hidden;
+  }
+
+  .smart-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      url("{{ url_for('static', filename='images/texture-grid.svg') }}")
+      repeat;
+    background-size: 64px 64px;
+    opacity: .35;
+  }
+
+  .smart-hero-inner {
+    position: relative;
+  }
+
+  .smart-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    color: var(--text-on-ink);
+    margin: 14px 0 10px;
+  }
+
+  .smart-hero p {
+    max-width: 740px;
+    color: var(--text-on-ink-soft);
+    line-height: 1.75;
+  }
+
+  .smart-wrap {
+    padding: 40px 0 82px;
+  }
+
+  .smart-form-card,
+  .smart-day {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+
+  .smart-form-card h2,
+  .smart-result-heading h2 {
+    font-family: var(--font-display);
+    color: var(--text-main);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    margin-bottom: 9px;
+  }
+
+  .smart-muted {
+    color: var(--text-soft);
+    line-height: 1.7;
+  }
+
+  .smart-form {
+    display: grid;
+    gap: 23px;
+    margin-top: 24px;
+  }
+
+  .smart-label {
+    display: block;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 9px;
+  }
+
+  .smart-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    max-width: 480px;
+  }
+
+  .smart-date-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .smart-date,
+  .smart-select {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--paper);
+    color: var(--text-main);
+    font: inherit;
+    padding: 10px 13px;
+  }
+
+  .smart-remove-day,
+  .smart-add-day {
+    font: inherit;
+    font-weight: 750;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .smart-remove-day {
+    min-height: 45px;
+    padding: 0 14px;
+    color: var(--danger);
+    background: var(--card);
+    border: 1px solid var(--danger-border);
+  }
+
+  .smart-add-day {
+    width: fit-content;
+    padding: 10px 16px;
+    color: var(--accent-dark);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+  }
+
+  .smart-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .smart-submit {
+    justify-self: start;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .smart-flash {
+    border-radius: 12px;
+    padding: 12px 16px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    margin-bottom: 18px;
+  }
+
+  .smart-results {
+    margin-top: 40px;
+  }
+
+  .smart-result-heading {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+
+  .smart-day {
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .smart-day h3 {
+    color: var(--text-main);
+    font-family: var(--font-display);
+    margin-bottom: 13px;
+    font-size: 1.25rem;
+  }
+
+  .smart-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 17px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .smart-item img {
+    width: 76px;
+    height: 76px;
+    object-fit: cover;
+    border-radius: 12px;
+    background: var(--paper-dim);
+  }
+
+  .smart-item-main {
+    flex: 1;
+    min-width: 210px;
+  }
+
+  .smart-item-main a {
+    color: var(--text-main);
+    font-weight: 800;
+  }
+
+  .smart-item-main p {
+    color: var(--text-soft);
+    margin-top: 5px;
+    font-size: .88rem;
+    line-height: 1.55;
+  }
+
+  .smart-time {
+    color: var(--accent-dark);
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .smart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .smart-save-form {
+    margin: 0;
+  }
+
+  .smart-save {
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: var(--text-on-accent);
+    transition: .18s ease;
+  }
+
+  .smart-save:hover {
+    opacity: .9;
+    transform: translateY(-1px);
+  }
+
+  .smart-note {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 9px;
+    padding: 13px 15px;
+    margin-top: 18px;
+    color: var(--text-soft);
+    line-height: 1.65;
+  }
+
+  .smart-empty {
+    color: var(--text-soft);
+    padding: 10px 0;
+  }
+
+  .smart-result-note {
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .smart-wrap {
+      padding-top: 22px;
+    }
+
+    .smart-form-card,
+    .smart-day {
+      padding: 18px;
+      border-radius: 17px;
+    }
+
+    .smart-fields {
+      grid-template-columns: 1fr;
+    }
+
+    .smart-item {
+      align-items: flex-start;
+    }
+
+    .smart-item-main {
+      min-width: 0;
+      width: calc(100% - 95px);
+    }
+
+    .smart-time {
+      width: 100%;
+    }
+
+    .smart-item-actions {
+      width: 100%;
+    }
+
+    .smart-save-form {
+      width: 100%;
+    }
+
+    .smart-submit,
+    .smart-save {
+      width: 100%;
+    }
+
+    .smart-remove-day {
+      flex-shrink: 0;
+    }
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<section class="smart-hero">
+  <div class="page-shell smart-hero-inner">
+
+    <span class="eyebrow-label on-ink">
+      My AFAQ
+    </span>
+
+    <h1>
+      Create Your Smart Schedule
+    </h1>
+
+    <p>
+      Choose the days you are available and your preferred time.
+      AFAQ will suggest personalized events that match your interests
+      and schedule.
+    </p>
+
+  </div>
+</section>
+
+
+<section class="smart-wrap">
+  <div class="page-shell">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <p class="smart-flash" role="status">
+          {{ message }}
+        </p>
+      {% endfor %}
+    {% endwith %}
+
+
+    <div class="smart-form-card">
+
+      <h2>
+        When are you available?
+      </h2>
+
+      <p class="smart-muted">
+        Choose the days you are available within the next 90 days.
+        You may add as many available dates as you need.
+        Suggestions use the events currently available in AFAQ.
+      </p>
+
+
+      <form
+        method="POST"
+        action="{{ url_for('smart_schedule.planner_page') }}"
+        class="smart-form"
+        id="smart-schedule-form"
+      >
+
+        <div>
+
+          <label
+            class="smart-label"
+            for="first-smart-date"
+          >
+            Your available dates
+          </label>
+
+
+          <div
+            class="smart-dates"
+            id="smart-dates"
+          >
+
+            {% for chosen_date in selected_dates if chosen_date %}
+
+              <div class="smart-date-row">
+
+                <input
+                  class="smart-date"
+                  type="date"
+                  name="dates"
+                  value="{{ chosen_date }}"
+                  min="{{ today.isoformat() }}"
+                  max="{{ last_day.isoformat() }}"
+                  aria-label="Available date"
+                  required
+                >
+
+                <button
+                  class="smart-remove-day"
+                  type="button"
+                  aria-label="Remove date"
+                >
+                  &times;
+                </button>
+
+              </div>
+
+            {% else %}
+
+              <div class="smart-date-row">
+
+                <input
+                  id="first-smart-date"
+                  class="smart-date"
+                  type="date"
+                  name="dates"
+                  min="{{ today.isoformat() }}"
+                  max="{{ last_day.isoformat() }}"
+                  aria-label="Available date"
+                  required
+                >
+
+                <button
+                  class="smart-remove-day"
+                  type="button"
+                  aria-label="Remove date"
+                >
+                  &times;
+                </button>
+
+              </div>
+
+            {% endfor %}
+
+          </div>
+
+
+          <button
+            type="button"
+            class="smart-add-day"
+            id="smart-add-date"
+          >
+            + Add another day
+          </button>
+
+        </div>
+
+
+        <div class="smart-fields">
+
+          <div>
+
+            <label
+              class="smart-label"
+              for="smart-time"
+            >
+              Preferred time
+            </label>
+
+            <select
+              class="smart-select"
+              id="smart-time"
+              name="preferred_time"
+            >
+
+              {% for key, range in time_windows.items() %}
+
+                <option
+                  value="{{ key }}"
+                  {% if preferred_time == key %}selected{% endif %}
+                >
+                  {{ key|capitalize }}
+
+                  {% if key == 'morning' %}
+                    (8 AM–12 PM)
+                  {% elif key == 'afternoon' %}
+                    (12–5 PM)
+                  {% elif key == 'evening' %}
+                    (5 PM–midnight)
+                  {% endif %}
+                </option>
+
+              {% endfor %}
+
+            </select>
+
+          </div>
+
+
+          <div>
+
+            <label
+              class="smart-label"
+              for="smart-count"
+            >
+              Maximum events per day
+            </label>
+
+            <select
+              class="smart-select"
+              id="smart-count"
+              name="max_per_day"
+            >
+
+              {% for n in [1, 2, 3] %}
+
+                <option
+                  value="{{ n }}"
+                  {% if max_per_day|string == n|string %}selected{% endif %}
+                >
+                  {{ n }}
+                  {{ 'event' if n == 1 else 'events' }}
+                </option>
+
+              {% endfor %}
+
+
+              <option
+                value="any"
+                {% if max_per_day|string|lower == 'any' %}selected{% endif %}
+              >
+                Any
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="primary-btn smart-submit"
+          type="submit"
+        >
+          Generate My Schedule
+        </button>
+
+      </form>
+
+
+      <p class="smart-note">
+        Suggested visit times are 90-minute planning estimates within
+        listed opening hours, not official session times or bookings.
+        Please check the official event link before attending.
+      </p>
+
+    </div>
+
+
+    {% if schedule is not none %}
+
+      <div class="smart-results">
+
+        <div class="smart-result-heading">
+
+          <div>
+            <h2>
+              Your Smart Schedule
+            </h2>
+
+            <p class="smart-muted">
+              Explore the suggested events below and save only the ones
+              you would like to attend.
+            </p>
+          </div>
+
+
+          <a
+            class="outline-btn"
+            href="{{ url_for('calendar.calendar_page') }}"
+          >
+            My Personal Calendar &rarr;
+          </a>
+
+        </div>
+
+
+        <p class="smart-note smart-result-note">
+          These are personalized suggestions only.
+          Nothing is automatically added to your Personal Calendar.
+          Use the "Save to Calendar" button for the events you choose.
+        </p>
+
+
+        {% set total = namespace(value=0) %}
+
+
+        {% for day in schedule %}
+
+          <div class="smart-day">
+
+            <h3>
+              {{ day.date.strftime('%A, %d %B %Y') }}
+            </h3>
+
+
+            {% if day.existing_count %}
+
+              <p class="smart-muted">
+                You already have
+                {{ day.existing_count }}
+                event(s) saved for this date.
+              </p>
+
+            {% endif %}
+
+
+            {% for item in day["items"] %}
+
+              {% set total.value = total.value + 1 %}
+
+
+              <div class="smart-item">
+
+                {% if item.event.image %}
+
+                  <img
+                    src="{{ item.event.image }}"
+                    alt="{{ item.event.title }}"
+                  >
+
+                {% endif %}
+
+
+                <div class="smart-item-main">
+
+                  <a
+                    href="{{ url_for(
+                      'events.event_details',
+                      event_id=item.event.id
+                    ) }}"
+                  >
+                    {{ item.event.title }}
+                  </a>
+
+                  <p>
+                    {{ item.event.category }}
+                    ·
+                    Listed hours:
+                    {{ item.listed_hours }}
+                  </p>
+
+                </div>
+
+
+                <span class="smart-time">
+                  Suggested:
+                  {{ item.suggested_start }}
+                  –
+                  {{ item.suggested_end }}
+                </span>
+
+
+                <div class="smart-item-actions">
+
+                  <form
+                    method="POST"
+                    action="{{ url_for(
+                      'smart_schedule.save_schedule'
+                    ) }}"
+                    class="smart-save-form"
+                  >
+
+                    <input
+                      type="hidden"
+                      name="event_id"
+                      value="{{ item.event_id }}"
+                    >
+
+                    <input
+                      type="hidden"
+                      name="planned_date"
+                      value="{{ item.date.isoformat() }}"
+                    >
+
+                    <button
+                      class="smart-save"
+                      type="submit"
+                    >
+                      Save to Calendar
+                    </button>
+
+                  </form>
+
+                </div>
+
+              </div>
+
+
+            {% else %}
+
+              <p class="smart-empty">
+                No further matches for this date and preferred time.
+                Try another day or time.
+              </p>
+
+            {% endfor %}
+
+          </div>
+
+        {% endfor %}
+
+
+        {% if total.value == 0 %}
+
+          <p class="smart-note">
+            No matching events were found for the selected availability.
+            Try changing the preferred time, selecting more dates,
+            or choosing Any for the number of events.
+          </p>
+
+        {% endif %}
+
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+
+<script>
+  (function () {
+
+    const holder =
+      document.getElementById('smart-dates');
+
+    const add =
+      document.getElementById('smart-add-date');
+
+    const form =
+      document.getElementById('smart-schedule-form');
+
+
+    if (!holder || !add || !form) {
+      return;
+    }
+
+
+    function refresh() {
+
+      const rows =
+        holder.querySelectorAll(
+          '.smart-date-row'
+        );
+
+
+      rows.forEach(function (row) {
+
+        const removeButton =
+          row.querySelector(
+            '.smart-remove-day'
+          );
+
+        if (removeButton) {
+          removeButton.hidden =
+            rows.length <= 1;
+        }
+
+      });
+
+    }
+
+
+    holder.addEventListener(
+      'click',
+      function (event) {
+
+        const removeButton =
+          event.target.closest(
+            '.smart-remove-day'
+          );
+
+
+        if (!removeButton) {
+          return;
+        }
+
+
+        const rows =
+          holder.querySelectorAll(
+            '.smart-date-row'
+          );
+
+
+        if (rows.length > 1) {
+
+          removeButton
+            .closest(
+              '.smart-date-row'
+            )
+            .remove();
+
+        }
+
+
+        refresh();
+
+      }
+    );
+
+
+    add.addEventListener(
+      'click',
+      function () {
+
+        const source =
+          holder.querySelector(
+            '.smart-date-row'
+          );
+
+
+        if (!source) {
+          return;
+        }
+
+
+        const clone =
+          source.cloneNode(true);
+
+
+        const input =
+          clone.querySelector(
+            'input'
+          );
+
+
+        if (input) {
+
+          input.value = '';
+
+          input.removeAttribute(
+            'id'
+          );
+
+        }
+
+
+        holder.appendChild(
+          clone
+        );
+
+
+        refresh();
+
+      }
+    );
+
+
+    form.addEventListener(
+      'submit',
+      function (event) {
+
+        const values =
+          [
+            ...holder.querySelectorAll(
+              'input[name="dates"]'
+            )
+          ]
+          .map(function (input) {
+            return input.value;
+          });
+
+
+        const nonEmptyValues =
+          values.filter(Boolean);
+
+
+        if (
+          new Set(nonEmptyValues).size
+          !== nonEmptyValues.length
+        ) {
+
+          event.preventDefault();
+
+          alert(
+            'Please choose different dates.'
+          );
+
+        }
+
+      }
+    );
+
+
+    refresh();
+
+  })();
+</script>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% macro event_card(event, badge_text, meta_text, avg_rating=None, is_favorited=False, rank=None) %}
+<div class="event-card-shell">
+  <a class="event-card" href="{{ url_for('events.event_details', event_id=event.id) }}">
+    {% if event.image %}
+      <img class="event-card-img" src="{{ event.image }}" alt="{{ event.title }}">
+    {% else %}
+      <img class="event-card-img" src="https://via.placeholder.com/600x800?text=Event" alt="Event Image">
+    {% endif %}
+    <div class="event-card-scrim"></div>
+
+    <div class="event-card-top">
+      {% if rank %}
+        <span class="top-rated-rank">{{ rank }}</span>
+      {% else %}
+        <span class="event-card-category">{{ badge_text }}</span>
+      {% endif %}
+    </div>
+
+    <div class="event-card-bottom">
+      <h3>{{ event.title }}</h3>
+      <div class="event-card-meta-row">
+        <span class="meta-text">{{ meta_text }}</span>
+        <div class="event-card-meta-actions">
+          {% if avg_rating %}
+            <span class="event-card-rating-chip">
+              <span class="stars-display">&#9733;</span>{{ avg_rating }}
+            </span>
+          {% endif %}
+          <span class="event-card-arrow">&rarr;</span>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <form method="POST" action="{{ url_for('favorites.toggle_favorite', event_id=event.id) }}" class="fav-form">
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <button
+      type="submit"
+      class="fav-btn {{ 'is-active' if is_favorited else '' }}"
+      aria-label="{{ 'Remove from favorites' if is_favorited else 'Add to favorites' }}"
+      title="{{ 'Remove from favorites' if is_favorited else 'Add to favorites' }}"
+    >{{ '\u2665' if is_favorited else '\u2661' }}</button>
+  </form>
+</div>
+{% endmacro %}

@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Event | AFAQ{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .edit-event-hero {
+    background:
+      linear-gradient(90deg, rgba(58, 42, 31, 0.76), rgba(184, 149, 106, 0.28)),
+      url("{{ url_for('static', filename='images/about-bg.jpg') }}") center/cover no-repeat;
+    padding: 72px 0 64px;
+    color: var(--text-light);
+  }
+
+  .edit-event-hero h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+  }
+
+  .edit-event-hero p {
+    color: rgba(255, 248, 240, 0.9);
+    line-height: 1.8;
+    max-width: 650px;
+  }
+
+  .edit-event-section {
+    padding: 54px 0 90px;
+  }
+
+  .edit-form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    padding: 36px 38px 42px;
+    max-width: 980px;
+  }
+
+  .edit-form-card h2 {
+    font-size: 1.9rem;
+    margin-bottom: 8px;
+    color: var(--text-main);
+  }
+
+  .form-note {
+    color: var(--text-soft);
+    line-height: 1.7;
+    margin-bottom: 26px;
+  }
+
+  .edit-form {
+    display: grid;
+    gap: 20px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 22px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group.full {
+    grid-column: 1 / -1;
+  }
+
+  .form-group label {
+    color: var(--text-soft);
+    font-size: 0.84rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .profile-input {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    color: var(--text-main);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 0.98rem;
+    font-family: inherit;
+    outline: none;
+    transition: 0.22s ease;
+  }
+
+  .profile-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.16);
+  }
+
+  textarea.profile-input {
+    min-height: 130px;
+    resize: vertical;
+  }
+
+  .form-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 8px 0;
+  }
+
+  .section-title {
+    color: var(--text-main);
+    font-size: 1.1rem;
+    margin-top: 4px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .save-btn {
+    border: none;
+    cursor: pointer;
+  }
+
+  @media (max-width: 800px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+      grid-column: auto;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="edit-event-hero">
+  <div class="page-shell">
+    <h1>Edit Event</h1>
+    <p>Update event information, review details, and save changes to keep AFAQ content accurate.</p>
+  </div>
+</section>
+
+<section class="edit-event-section">
+  <div class="page-shell">
+    <div class="edit-form-card">
+      <h2>Update Event</h2>
+      <p class="form-note">
+        Modify the event details below. The updated information will be reflected on the platform after saving.
+      </p>
+
+      <form method="POST" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to save these changes?');">
+
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Title</label>
+            <input type="text" name="title" value="{{ event.title }}" class="profile-input" required>
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <input type="text" name="category" value="{{ event.category }}" class="profile-input" required>
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" value="{{ event.city }}" class="profile-input" required>
+          </div>
+
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea name="description" class="profile-input" required>{{ event.description }}</textarea>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+        <h3 class="section-title">Date & Time</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="date" name="start_date" value="{{ event.start_date }}" class="profile-input" required>
+          </div>
+
+          <div class="form-group">
+            <label>End Date</label>
+            <input type="date" name="end_date" value="{{ event.end_date or '' }}" class="profile-input">
+          </div>
+
+          <div class="form-group">
+            <label>Time</label>
+            <input type="text" name="time" value="{{ event.time or '' }}" class="profile-input" required>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+        <h3 class="section-title">Additional Details</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" name="location" value="{{ event.location or '' }}" class="profile-input">
+          </div>
+
+          <div class="form-group">
+            <label>Price</label>
+            <input type="text" name="price" value="{{ event.price or '' }}" class="profile-input">
+          </div>
+
+          <div class="form-group full">
+            <label>Image </label>
+            <input type="file" name="image" accept="image/*">
+          </div>
+
+          <div class="form-group full">
+            <label>Official Link</label>
+            <input type="text" name="official_link" value="{{ event.official_link or '' }}" class="profile-input">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="primary-btn save-btn">Save Changes</button>
+          <a href="{{ url_for('admin.admin_dashboard') }}" class="outline-btn">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

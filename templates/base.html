@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}AFAQ{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .page-shell {
+      width: min(1380px, 94%);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--ink);
+    }
+
+    .navbar {
+      min-height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 10px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .brand img {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      transition: 0.25s ease;
+      filter: brightness(0) invert(1);
+    }
+
+    .brand img:hover {
+      transform: scale(1.05);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .brand-text span {
+      font-size: 0.72rem;
+      color: var(--text-on-ink-soft);
+      margin-top: 8px;
+      letter-spacing: 2.5px;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      font-family: var(--font-body);
+      font-size: 0.94rem;
+      font-weight: 600;
+      color: var(--text-on-ink-soft);
+      transition: 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-on-ink);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .nav-actions .login-btn,
+    .nav-actions .outline-btn {
+      border-color: var(--border-on-ink);
+      color: var(--text-on-ink);
+    }
+
+    .nav-actions .login-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .nav-actions .profile-pill {
+      border-color: var(--border-on-ink);
+      background: rgba(245, 242, 235, 0.06);
+      color: var(--text-on-ink);
+    }
+
+    .profile-avatar-small {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--text-on-accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .section {
+      padding: 72px 0 34px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .page-title {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      margin-bottom: 24px;
+      color: var(--text-main);
+    }
+
+    footer {
+      position: relative;
+      background: var(--secondary-dark);
+      margin-top: 0;
+    }
+
+    footer::before {
+      content: "";
+      display: block;
+      height: 4px;
+      background: var(--accent);
+    }
+
+    .footer-inner {
+      padding: 52px 0 30px;
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .footer-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .footer-logo-row img {
+      width: 80px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
+
+    .footer-brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.05;
+    }
+
+    .footer-brand-text strong {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--text-light);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-brand-text span {
+      font-size: 0.8rem;
+      letter-spacing: 2.5px;
+      color: rgba(251, 248, 243, 0.55);
+      margin-top: 6px;
+    }
+
+    .footer-brand p,
+    .footer-links a,
+    .footer-contact p,
+    .footer-bottom {
+      color: rgba(251, 248, 243, 0.62);
+      line-height: 1.85;
+      font-size: 0.92rem;
+    }
+
+    .footer-links,
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links h4,
+    .footer-contact h4 {
+      font-family: var(--font-display);
+      margin-bottom: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-light);
+    }
+
+    .footer-links a {
+      width: fit-content;
+      transition: 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-soft);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(251, 248, 243, 0.12);
+      padding: 18px 0 26px;
+      text-align: center;
+    }
+
+    @media (max-width: 1100px) {
+      .events-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .events-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .details-body h1 {
+        font-size: 1.7rem;
+      }
+
+      .brand img {
+        width: 110px;
+      }
+
+      .profile-pill,
+      .logout-btn,
+      .login-btn,
+      .signup-btn {
+        width: 100%;
+      }
+    }
+
+    input[type="date"],
+    input[type="time"] {
+      direction: ltr;
+    }
+  </style>
+
+  {% block extra_styles %}{% endblock %}
+</head>
+<body>
+  <header class="topbar">
+    <div class="page-shell navbar" id="site-navbar">
+      <a class="brand" href="{{ url_for('events.home') }}">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AFAQ Logo">
+        <div class="brand-text">
+          <span>RIYADH EVENTS</span>
+        </div>
+      </a>
+
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-mobile-panel">
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <div class="nav-backdrop" id="nav-backdrop"></div>
+
+      <div class="nav-mobile-panel" id="nav-mobile-panel">
+      {% if current_user.is_authenticated and current_user.role == 'admin' and request.endpoint not in ['auth.login', 'auth.signup'] %}
+        <nav class="nav-links">
+  
+  <a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a>
+  <a href="{{ url_for('admin.profile') }}">Profile</a>
+</nav>
+       
+      {% else %}
+        <nav class="nav-links">
+          <a href="{{ url_for('events.home') }}">Home</a>
+          <a href="{{ url_for('events.events_page') }}">Events</a>
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('favorites.favorites_page') }}">Favorites</a>
+            <a href="{{ url_for('calendar.calendar_page') }}">Calendar</a>
+            <a href="{{ url_for('smart_schedule.planner_page') }}">Smart Schedule</a>          {% endif %}
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        {% if request.endpoint not in ['auth.login', 'auth.signup'] %}
+          <div class="nav-actions">
+            {% if current_user.is_authenticated %}
+              <a href="{{ url_for('auth.user_profile') }}" class="profile-pill" title="My Profile">
+                <span class="profile-avatar-small">
+                  {{ current_user.fullname[0]|upper if current_user.fullname else 'U' }}
+                </span>
+                <span>{{ current_user.fullname }}</span>
+              </a>
+            {% else %}
+              <a href="{{ url_for('auth.login') }}" class="login-btn">Login</a>
+              <a href="{{ url_for('auth.signup') }}" class="signup-btn">Sign Up</a>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer id="contact">
+    <div class="page-shell footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo-row">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AFAQ Logo">
+          <div class="footer-brand-text">
+            <strong>AFAQ</strong>
+            <span>RIYADH EVENTS</span>
+          </div>
+        </div>
+        <p>
+          AFAQ is designed to introduce visitors to Riyadh events through a modern and welcoming experience.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="{{ url_for('events.home') }}">Home</a>
+        <a href="{{ url_for('events.events_page') }}">Events</a>
+      </div>
+
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p>Email: info@afaq.com</p>
+        <p>Location: Riyadh, Saudi Arabia</p>
+        <p>Availability: 24/7 Event Browsing</p>
+      </div>
+    </div>
+
+    <div class="page-shell footer-bottom">
+      © 2026 AFAQ. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var toggle = document.getElementById('nav-toggle');
+      var navbar = document.getElementById('site-navbar');
+      var backdrop = document.getElementById('nav-backdrop');
+      if (!toggle || !navbar) return;
+
+      function closeMenu() {
+        navbar.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      function toggleMenu() {
+        var isOpen = navbar.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      }
+
+      toggle.addEventListener('click', toggleMenu);
+      if (backdrop) backdrop.addEventListener('click', closeMenu);
+
+      navbar.querySelectorAll('.nav-links a, .nav-actions a').forEach(function (link) {
+        link.addEventListener('click', closeMenu);
+      });
+
+      window.addEventListener('resize', function () {
+        if (window.innerWidth > 860) closeMenu();
+      });
+    })();
+  </script>
+</body>
+</html>

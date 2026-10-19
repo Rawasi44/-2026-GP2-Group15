@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up – AFAQ{% endblock %}
+
+{% block content %}
+
+<div class="auth-page">
+  <div class="login-card">
+    <h2 class="login-title">Sign Up</h2>
+
+    {# ── Validation errors (passed from auth.py as `errors` list) ── #}
+    {% if errors %}
+      <div class="auth-flash">
+        {% if errors | length == 1 %}
+          {{ errors[0] }}
+        {% else %}
+          <ul>
+            {% for err in errors %}
+              <li>{{ err }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {# ── Flash messages (e.g. success redirect feedback) ── #}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="auth-flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {# ── Form — action/method unchanged from original backend ── #}
+    <form method="POST" action="{{ url_for('auth.signup') }}">
+
+      {# Full name — repopulated on validation failure via `fullname` context var #}
+      <input
+        type="text"
+        name="fullname"
+        class="login-input"
+        placeholder="Full Name"
+        value="{{ fullname }}"
+        required
+      >
+
+      {# Email — repopulated on validation failure via `email` context var #}
+      <input
+        type="email"
+        name="email"
+        class="login-input"
+        placeholder="Email"
+        value="{{ email }}"
+        required
+      >
+
+      {# Password — never repopulated for security #}
+      <input
+        type="password"
+        name="password"
+        class="login-input"
+        placeholder="Password"
+        required
+      >
+      <small class="field-hint">
+        At least 8 characters, with an uppercase letter, a lowercase letter, a number, and a special character.
+      </small>
+
+      <button type="submit" class="login-btn-main">Create Account</button>
+    </form>
+
+    <p class="signup-question">
+      Already have an account?
+      <a href="{{ url_for('auth.login') }}">Login</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Your Email | AFAQ{% endblock %}
+
+{% block content %}
+
+<div class="auth-page hide-auth-buttons">
+  <div class="login-card">
+    <h2 class="login-title">Verify Your Email</h2>
+    <p class="auth-note">
+      Enter the 4-digit code we sent to your email to activate your AFAQ account.
+    </p>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="auth-flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if errors %}
+      <div class="auth-flash">
+        {% if errors|length == 1 %}
+          {{ errors[0] }}
+        {% else %}
+          <ul>
+            {% for error in errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('auth.verify_signup_code') }}">
+      <input type="text" name="code" class="login-input" placeholder="4-digit code" maxlength="4" required>
+      <button type="submit" class="login-btn-main">Verify Email</button>
+    </form>
+
+    <form method="POST" action="{{ url_for('auth.resend_signup_code') }}" class="resend-form">
+      <button type="submit" class="resend-btn">Resend Code</button>
+    </form>
+
+    <p class="signup-question">
+      <a href="{{ url_for('auth.login') }}">Back to login</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,865 @@
+{% extends "base.html" %}
+
+{% block title %}Personal Calendar | AFAQ{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .calendar-hero {
+    position: relative;
+    background: var(--ink);
+    padding: 58px 0 50px;
+    overflow: hidden;
+  }
+
+  .calendar-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("{{ url_for('static', filename='images/texture-grid.svg') }}");
+    background-repeat: repeat;
+    background-size: 64px 64px;
+    opacity: 0.45;
+  }
+
+  .calendar-hero-inner {
+    position: relative;
+  }
+
+  .calendar-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: var(--text-on-ink);
+    margin: 14px 0 10px;
+    font-weight: 800;
+  }
+
+  .calendar-hero p {
+    max-width: 620px;
+    color: var(--text-on-ink-soft);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .calendar-section {
+    padding: 46px 0 90px;
+  }
+
+  .calendar-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  /* Header */
+  .calendar-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px 26px;
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+  }
+
+  .calendar-month-title {
+    min-width: 0;
+  }
+
+  .calendar-month-title span {
+    display: block;
+    color: var(--text-soft);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    margin-bottom: 4px;
+  }
+
+  .calendar-month-title h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.15rem);
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  .calendar-controls {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+
+  .calendar-nav-btn,
+  .calendar-today-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: 0.18s ease;
+  }
+
+  .calendar-nav-btn {
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--text-main);
+  }
+
+  .calendar-nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+  }
+
+  .calendar-today-btn {
+    background: var(--accent);
+    color: var(--text-on-accent);
+    border: 1px solid var(--accent);
+  }
+
+  .calendar-today-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Weekday headings */
+  .calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .calendar-weekday {
+    padding: 13px 8px;
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* Month grid */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+
+  .calendar-day {
+    position: relative;
+    min-height: 145px;
+    padding: 12px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--card);
+    transition: 0.18s ease;
+    min-width: 0;
+  }
+
+  .calendar-day:nth-child(7n) {
+    border-right: none;
+  }
+
+  .calendar-day:hover {
+    background: rgba(184, 146, 90, 0.04);
+  }
+
+  .calendar-day.other-month {
+    background: var(--bg-soft);
+  }
+
+  .calendar-day.other-month .day-number {
+    opacity: 0.32;
+  }
+
+  .calendar-day.today {
+    background: rgba(184, 146, 90, 0.10);
+  }
+
+  .calendar-day.today::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid rgba(184, 146, 90, 0.45);
+    border-radius: 13px;
+    pointer-events: none;
+  }
+
+  .day-number-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 7px;
+    margin-bottom: 9px;
+  }
+
+  .day-number {
+    width: 29px;
+    height: 29px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--text-main);
+    font-size: 0.88rem;
+    font-weight: 800;
+  }
+
+  .today .day-number {
+    background: var(--accent);
+    color: var(--text-on-accent);
+  }
+
+  .day-event-count {
+    display: none;
+    min-width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--text-on-accent);
+    font-size: 0.67rem;
+    font-weight: 800;
+  }
+
+  /* Events inside each day */
+  .day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .calendar-event-row {
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .calendar-event-chip {
+    flex: 1;
+    min-width: 0;
+    display: block;
+    padding: 8px 9px;
+    border-radius: 9px;
+    background: var(--bg-soft);
+    border-left: 3px solid var(--accent);
+    transition: 0.18s ease;
+  }
+
+  .calendar-event-chip:hover {
+    background: rgba(184, 146, 90, 0.13);
+  }
+
+  .calendar-event-title {
+    display: block;
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .calendar-event-time {
+    display: block;
+    color: var(--text-soft);
+    font-size: 0.67rem;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .calendar-remove-form {
+    flex-shrink: 0;
+  }
+
+  .calendar-remove-mini {
+    width: 27px;
+    height: 100%;
+    min-height: 37px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-soft);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .calendar-remove-mini:hover {
+    color: var(--danger);
+    background: var(--danger-bg);
+    border-color: var(--danger-border);
+  }
+
+  /* Bottom note */
+  .calendar-note {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px 22px;
+    background: var(--bg-soft);
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+
+  .calendar-note a {
+    color: var(--accent-dark);
+    font-weight: 800;
+  }
+
+  /* Mobile date details */
+  .mobile-agenda {
+    display: none;
+  }
+
+  .mobile-day-panel {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .calendar-day {
+      min-height: 115px;
+      padding: 8px;
+    }
+
+    .calendar-event-chip {
+      padding: 6px 7px;
+    }
+
+    .calendar-event-title {
+      font-size: 0.7rem;
+    }
+
+    .calendar-remove-mini {
+      width: 22px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .calendar-section {
+      padding-top: 28px;
+    }
+
+    .calendar-card {
+      border-radius: 18px;
+    }
+
+    .calendar-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 20px;
+    }
+
+    .calendar-month-title {
+      text-align: center;
+    }
+
+    .calendar-controls {
+      justify-content: center;
+    }
+
+    .calendar-nav-btn,
+    .calendar-today-btn {
+      min-height: 40px;
+      padding: 9px 12px;
+      font-size: 0.8rem;
+    }
+
+    .calendar-weekday {
+      padding: 10px 2px;
+      font-size: 0.64rem;
+      letter-spacing: 0;
+    }
+
+    .calendar-day {
+      min-height: 64px;
+      padding: 5px 3px;
+      cursor: pointer;
+    }
+
+    .day-number-row {
+      margin-bottom: 3px;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .day-number {
+      width: 25px;
+      height: 25px;
+      font-size: 0.72rem;
+    }
+
+    .day-events {
+      display: none;
+    }
+
+    .day-event-count {
+      display: inline-flex;
+    }
+
+    .calendar-day.today::after {
+      inset: 2px;
+      border-radius: 9px;
+    }
+
+    .calendar-note {
+      flex-direction: column;
+      text-align: center;
+      padding: 16px;
+    }
+
+    .mobile-agenda {
+      display: block;
+      margin-top: 22px;
+    }
+
+    .mobile-agenda-header {
+      margin-bottom: 12px;
+    }
+
+    .mobile-agenda-header span {
+      display: block;
+      color: var(--text-soft);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .mobile-agenda-header h3 {
+      font-family: var(--font-display);
+      color: var(--text-main);
+      font-size: 1.3rem;
+    }
+
+    .mobile-day-panel.active {
+      display: block;
+    }
+
+    .mobile-event-card {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .mobile-event-info {
+      min-width: 0;
+    }
+
+    .mobile-event-info a {
+      display: block;
+      color: var(--text-main);
+      font-weight: 800;
+      line-height: 1.4;
+      margin-bottom: 5px;
+    }
+
+    .mobile-event-info p {
+      color: var(--text-soft);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .mobile-remove-btn {
+      border: 1px solid var(--danger-border);
+      background: transparent;
+      color: var(--danger);
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-weight: 700;
+      cursor: pointer;
+      height: fit-content;
+    }
+
+    .mobile-empty-day {
+      padding: 18px;
+      text-align: center;
+      background: var(--bg-soft);
+      border-radius: 14px;
+      color: var(--text-soft);
+    }
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<section class="calendar-hero">
+  <div class="page-shell calendar-hero-inner">
+    <span class="eyebrow-label on-ink">My AFAQ</span>
+    <h1>Personal Calendar</h1>
+    <p>
+      Organize the events you plan to attend and view them by date in your monthly calendar.
+    </p>
+  </div>
+</section>
+
+
+<section class="calendar-section">
+  <div class="page-shell">
+
+    <div class="calendar-card">
+
+      <div class="calendar-toolbar">
+
+        <div class="calendar-month-title">
+          <span>Your Schedule</span>
+          <h2>{{ month_name }} {{ year }}</h2>
+        </div>
+
+        <div class="calendar-controls">
+
+          <a
+            href="{{ url_for('calendar.calendar_page', year=prev_year, month=prev_month) }}"
+            class="calendar-nav-btn"
+          >
+            &larr; Previous
+          </a>
+
+          <a
+            href="{{ url_for('calendar.calendar_page') }}"
+            class="calendar-today-btn"
+          >
+            Today
+          </a>
+
+          <a
+            href="{{ url_for('calendar.calendar_page', year=next_year, month=next_month) }}"
+            class="calendar-nav-btn"
+          >
+            Next &rarr;
+          </a>
+
+        </div>
+      </div>
+
+
+      <div class="calendar-weekdays">
+        <div class="calendar-weekday">Sun</div>
+        <div class="calendar-weekday">Mon</div>
+        <div class="calendar-weekday">Tue</div>
+        <div class="calendar-weekday">Wed</div>
+        <div class="calendar-weekday">Thu</div>
+        <div class="calendar-weekday">Fri</div>
+        <div class="calendar-weekday">Sat</div>
+      </div>
+
+
+      <div class="calendar-grid">
+
+        {% for week in calendar_weeks %}
+
+          {% for day in week %}
+
+            <div
+              class="calendar-day
+                {% if not day.in_current_month %}other-month{% endif %}
+                {% if day.is_today %}today{% endif %}
+              "
+              data-date="{{ day.date.isoformat() }}"
+              data-label="{{ day.date.strftime('%A, %B %d, %Y') }}"
+            >
+
+              <div class="day-number-row">
+
+                <span class="day-number">
+                  {{ day.day_number }}
+                </span>
+
+                {% if day.events %}
+                  <span class="day-event-count">
+                    {{ day.events|length }}
+                  </span>
+                {% endif %}
+
+              </div>
+
+
+              {% if day.in_current_month %}
+                <div class="day-events">
+
+                  {% for event in day.events %}
+
+                    <div class="calendar-event-row">
+
+                      <a
+                        href="{{ url_for('events.event_details', event_id=event.id) }}"
+                        class="calendar-event-chip"
+                        title="{{ event.title }}"
+                      >
+
+                        <span class="calendar-event-title">
+                          {{ event.title }}
+                        </span>
+
+                        {% if event.time %}
+                          <span class="calendar-event-time">
+                            {{ event.time }}
+                          </span>
+                        {% endif %}
+
+                      </a>
+
+
+                      <form
+                        method="POST"
+                        action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
+                        class="calendar-remove-form"
+                      >
+
+                        <input
+                          type="hidden"
+                          name="next"
+                          value="{{ url_for('calendar.calendar_page', year=year, month=month) }}"
+                        >
+
+                        <button
+                          type="submit"
+                          class="calendar-remove-mini"
+                          title="Remove from calendar"
+                          aria-label="Remove {{ event.title }} from calendar"
+                        >
+                          &times;
+                        </button>
+
+                      </form>
+
+                    </div>
+
+                  {% endfor %}
+
+                </div>
+              {% endif %}
+
+            </div>
+
+          {% endfor %}
+
+        {% endfor %}
+
+      </div>
+
+
+      <div class="calendar-note">
+        <span>
+          Events appear on the date they start.
+        </span>
+
+        <a href="{{ url_for('events.events_page') }}">
+          Browse more events &rarr;
+        </a>
+      </div>
+
+    </div>
+
+
+    <!-- Mobile selected-day details -->
+    <div class="mobile-agenda">
+
+      <div class="mobile-agenda-header">
+        <span>Selected Date</span>
+        <h3 id="mobile-selected-date">
+          Select a day
+        </h3>
+      </div>
+
+
+      {% for week in calendar_weeks %}
+
+        {% for day in week %}
+
+          {% if day.in_current_month %}
+
+            <div
+              class="mobile-day-panel"
+              id="mobile-day-{{ day.date.isoformat() }}"
+            >
+
+              {% if day.events %}
+
+                {% for event in day.events %}
+
+                  <div class="mobile-event-card">
+
+                    <div class="mobile-event-info">
+
+                      <a href="{{ url_for('events.event_details', event_id=event.id) }}">
+                        {{ event.title }}
+                      </a>
+
+                      <p>
+                        {{ event.start_date }}
+
+                        {% if event.time %}
+                          &nbsp;•&nbsp; {{ event.time }}
+                        {% endif %}
+                      </p>
+
+                      {% if event.location or event.city %}
+                        <p>
+                          {{ event.location if event.location else event.city }}
+                        </p>
+                      {% endif %}
+
+                    </div>
+
+
+                    <form
+                      method="POST"
+                      action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
+                    >
+
+                      <input
+                        type="hidden"
+                        name="next"
+                        value="{{ url_for('calendar.calendar_page', year=year, month=month) }}"
+                      >
+
+                      <button
+                        type="submit"
+                        class="mobile-remove-btn"
+                      >
+                        Remove
+                      </button>
+
+                    </form>
+
+                  </div>
+
+                {% endfor %}
+
+              {% else %}
+
+                <div class="mobile-empty-day">
+                  No events planned for this day.
+                </div>
+
+              {% endif %}
+
+            </div>
+
+          {% endif %}
+
+        {% endfor %}
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const calendarDays = document.querySelectorAll(
+      ".calendar-day:not(.other-month)"
+    );
+
+    const selectedDateTitle =
+      document.getElementById("mobile-selected-date");
+
+
+    function showDay(dayElement) {
+
+      const dateValue =
+        dayElement.dataset.date;
+
+      const dateLabel =
+        dayElement.dataset.label;
+
+
+      document
+        .querySelectorAll(".mobile-day-panel")
+        .forEach(function (panel) {
+          panel.classList.remove("active");
+        });
+
+
+      const target =
+        document.getElementById(
+          "mobile-day-" + dateValue
+        );
+
+
+      if (target) {
+        target.classList.add("active");
+      }
+
+
+      if (selectedDateTitle) {
+        selectedDateTitle.textContent =
+          dateLabel;
+      }
+    }
+
+
+    calendarDays.forEach(function (day) {
+
+      day.addEventListener(
+        "click",
+        function (event) {
+
+          if (
+            event.target.closest("a") ||
+            event.target.closest("button") ||
+            event.target.closest("form")
+          ) {
+            return;
+          }
+
+          showDay(day);
+        }
+      );
+
+    });
+
+
+    const todayCell =
+      document.querySelector(
+        ".calendar-day.today:not(.other-month)"
+      );
+
+
+    if (todayCell) {
+      showDay(todayCell);
+    } else {
+
+      const firstCurrentDay =
+        document.querySelector(
+          ".calendar-day:not(.other-month)"
+        );
+
+      if (firstCurrentDay) {
+        showDay(firstCurrentDay);
+      }
+
+    }
+
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Profile | AFAQ{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .admin-profile-hero {
+    background:
+      linear-gradient(90deg, rgba(58, 42, 31, 0.76), rgba(184, 149, 106, 0.28)),
+      url("{{ url_for('static', filename='images/about-bg.jpg') }}") center/cover no-repeat;
+    padding: 72px 0 64px;
+    color: var(--text-light);
+  }
+
+  .admin-profile-hero h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+  }
+
+  .admin-profile-hero p {
+    color: rgba(255, 248, 240, 0.9);
+    line-height: 1.8;
+    max-width: 620px;
+  }
+
+  .admin-profile-section {
+    padding: 54px 0 90px;
+  }
+
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .profile-summary,
+  .profile-form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .profile-summary-top {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: var(--text-light);
+    padding: 34px 32px;
+  }
+
+  .profile-avatar-large {
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.42);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 18px;
+  }
+
+  .profile-summary-body {
+    padding: 28px 32px 34px;
+  }
+
+  .profile-info-row {
+    margin-bottom: 18px;
+  }
+
+  .profile-info-row label,
+  .form-group label {
+    display: block;
+    color: var(--text-soft);
+    font-size: 0.84rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+
+  .profile-info-row div,
+  .profile-input {
+    width: 100%;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 15px;
+    color: var(--text-main);
+    font-size: 0.98rem;
+  }
+
+  .profile-form-card {
+    padding: 34px 34px 38px;
+  }
+
+  .profile-form-card h2 {
+    font-size: 1.9rem;
+    margin-bottom: 8px;
+    color: var(--text-main);
+  }
+
+  .form-note {
+    color: var(--text-soft);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .role-badge {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: var(--text-light);
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: capitalize;
+  }
+
+  .admin-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+
+  @media (max-width: 900px) {
+    .profile-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="admin-profile-hero">
+  <div class="page-shell">
+    <h1>Admin Profile</h1>
+    <p>Manage your AFAQ admin account details and session controls securely.</p>
+  </div>
+</section>
+
+<section class="admin-profile-section">
+  <div class="page-shell profile-layout">
+
+    <aside class="profile-summary">
+      <div class="profile-summary-top">
+        <div class="profile-avatar-large">
+          {{ user.fullname[0]|upper if user.fullname else 'A' }}
+        </div>
+      </div>
+
+      <div class="profile-summary-body">
+        <div class="profile-info-row">
+          <label>Account Name</label>
+          <div>{{ user.fullname }}</div>
+        </div>
+
+        <div class="profile-info-row">
+          <label>Email</label>
+          <div>{{ user.email }}</div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="profile-form-card">
+      <h2>Admin Account</h2>
+      <p class="form-note">
+        This profile is used to manage administrator access and platform content control.
+      </p>
+
+      <div class="profile-info-row">
+        <label>Full Name</label>
+        <div>{{ user.fullname }}</div>
+      </div>
+
+      <div class="profile-info-row">
+        <label>Email</label>
+        <div>{{ user.email }}</div>
+      </div>
+
+      <div class="profile-info-row">
+        <label>Role</label>
+        <span class="role-badge">{{ user.role }}</span>
+      </div>
+
+      <div class="admin-actions">
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="primary-btn">Back to Dashboard</a>
+        <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

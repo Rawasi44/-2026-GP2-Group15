@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Reset Code | AFAQ{% endblock %}
+
+{% block content %}
+
+<div class="auth-page hide-auth-buttons">
+  <div class="login-card">
+    <h2 class="login-title">Verify Code</h2>
+    <p class="auth-note">
+      Enter the 4-digit code sent to your email, then choose your new password.
+    </p>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="auth-flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if errors %}
+      <div class="auth-flash">
+        {% if errors|length == 1 %}
+          {{ errors[0] }}
+        {% else %}
+          <ul>
+            {% for error in errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('auth.verify_reset_password_code') }}">
+      <input type="text" name="code" class="login-input" placeholder="4-digit code" maxlength="4" required>
+      <input type="password" name="new_password" class="login-input" placeholder="New password" required>
+      <small class="field-hint">
+        At least 8 characters, with an uppercase letter, a lowercase letter, a number, and a special character.
+      </small>
+      <input type="password" name="confirm_password" class="login-input" placeholder="Confirm new password" required>
+      <button type="submit" class="login-btn-main">Reset Password</button>
+    </form>
+
+    <p class="signup-question">
+      <a href="{{ url_for('auth.forgot_password') }}">Send a new code</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

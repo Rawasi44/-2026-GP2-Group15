@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}Add Event | AFAQ{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .admin-hero {
+    background: linear-gradient(135deg, var(--bg-soft) 0%, #e8ddd2 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 52px 0 40px;
+  }
+  .admin-hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -1px;
+    color: var(--text-main);
+    margin-bottom: 8px;
+  }
+  .admin-hero p { color: var(--text-soft); font-size: 1rem; }
+
+  .form-section { padding: 52px 0 80px; }
+
+  .form-card {
+    max-width: 820px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: var(--shadow);
+    padding: 40px 42px 48px;
+  }
+
+  /* Two-column grid */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full-width { grid-column: 1 / -1; }
+
+  .form-group label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .required-star { color: #c0704a; margin-left: 3px; }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--bg-soft);
+    color: var(--text-main);
+    font-size: 0.98rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(184, 149, 106, 0.15);
+  }
+  .form-group input.has-error,
+  .form-group textarea.has-error { border-color: #c0704a; }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+
+  .field-error { font-size: 0.86rem; color: #c0704a; }
+
+  /* Section dividers inside form */
+  .form-divider {
+    grid-column: 1 / -1;
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 6px 0;
+  }
+  .form-section-label {
+    grid-column: 1 / -1;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-soft);
+    margin-bottom: -8px;
+  }
+
+  input[type="date"],
+input[type="time"] {
+  direction: ltr;
+}
+
+  .form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .flash-banner {
+    background: #fdf3e7;
+    border: 1px solid var(--accent-soft);
+    border-radius: 14px;
+    padding: 14px 20px;
+    color: var(--text-main);
+    margin-bottom: 28px;
+    font-size: 0.97rem;
+  }
+
+  @media (max-width: 700px) {
+    .form-card { padding: 28px 20px 36px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full-width,
+    .form-divider,
+    .form-section-label,
+    .form-actions { grid-column: auto; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-hero">
+  <div class="page-shell">
+    <h1>Add New Event</h1>
+    <p>Fill in the details below to publish a new event. It will appear on your dashboard immediately.</p>
+  </div>
+</div>
+
+<section class="form-section">
+  <div class="page-shell">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash-banner">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="form-card">
+      <form method="POST" enctype="multipart/form-data">
+        <div class="form-grid">
+
+          <!-- Core info -->
+          <div class="form-section-label">Core Information</div>
+
+          <div class="form-group full-width">
+            <label>Title <span class="required-star">*</span></label>
+            <input type="text" name="title"
+                   value="{{ form_data.get('title', '') }}"
+                   class="{{ 'has-error' if errors.get('title') }}">
+            {% if errors.get('title') %}<span class="field-error">{{ errors.title }}</span>{% endif %}
+          </div>
+
+          <div class="form-group">
+            <label>Category <span class="required-star">*</span></label>
+            <input type="text" name="category"
+                   value="{{ form_data.get('category', '') }}"
+                   class="{{ 'has-error' if errors.get('category') }}">
+            {% if errors.get('category') %}<span class="field-error">{{ errors.category }}</span>{% endif %}
+          </div>
+
+       
+
+          <div class="form-group full-width">
+            <label>Description <span class="required-star">*</span></label>
+            <textarea name="description"
+                      class="{{ 'has-error' if errors.get('description') }}">{{ form_data.get('description', '') }}</textarea>
+            {% if errors.get('description') %}<span class="field-error">{{ errors.description }}</span>{% endif %}
+          </div>
+
+          <hr class="form-divider">
+
+          <!-- Date & Time -->
+          <div class="form-section-label">Date &amp; Time</div>
+
+          <div class="form-group">
+            <label>Start Date <span class="required-star">*</span></label>
+            <input type="date" name="date"
+                   value="{{ form_data.get('date', '') }}"
+                   class="{{ 'has-error' if errors.get('date') }}">
+            {% if errors.get('date') %}<span class="field-error">{{ errors.date }}</span>{% endif %}
+          </div>
+
+          <div class="form-group">
+            <label>End Date</label>
+            <input type="date" name="end_date"
+                   value="{{ form_data.get('end_date', '') }}"
+                   class="{{ 'has-error' if errors.get('end_date') }}">
+            {% if errors.get('end_date') %}<span class="field-error">{{ errors.end_date }}</span>{% endif %}
+          </div>
+
+          <div class="form-group">
+            <label>Time <span class="required-star">*</span></label>
+            <input type="time" name="time"
+                   value="{{ form_data.get('time', '') }}"
+                   class="{{ 'has-error' if errors.get('time') }}">
+            {% if errors.get('time') %}<span class="field-error">{{ errors.time }}</span>{% endif %}
+          </div>
+
+          <hr class="form-divider">
+
+          <!-- Extra details -->
+          <div class="form-section-label">Additional Details</div>
+
+          
+
+          <div class="form-group">
+            <label>Price</label>
+            <input type="text" name="price" value="{{ form_data.get('price', '') }}"
+                   placeholder="e.g. Free / 50 SAR">
+          </div>
+
+          <div class="form-group full-width">
+    <label>Event Image</label>
+    <input type="file" name="image" accept="image/*">
+</div>
+
+          <div class="form-group full-width">
+            <label>Official Link</label>
+            <input type="text" name="official_link"
+                   value="{{ form_data.get('official_link', '') }}"
+                   placeholder="https://...">
+          </div>
+
+          <!-- source is NOT a form field — it is hardcoded to "admin" in the route -->
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button type="submit" class="solid-btn">Add Event</button>
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="login-btn">Cancel</a>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
