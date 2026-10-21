@@ -9,6 +9,7 @@ from extensions import db
 from models.event import Event
 from models.rating import Rating
 from models.review import Review
+from models.calendar_event import CalendarEvent
 
 from services.activity_service import (
     get_user_favorite_ids,
@@ -549,6 +550,7 @@ def event_details(event_id):
     current_user_rating = None
     is_favorited = False
     is_in_calendar = False
+    current_calendar_date = None
 
     if current_user.is_authenticated:
         existing = (
@@ -579,19 +581,20 @@ def event_details(event_id):
             in favorite_ids
         )
 
-        calendar_ids = (
-            get_user_calendar_ids(
-                current_user.user_id,
-                [
-                    event_id
-                ]
+        calendar_entry = (
+            CalendarEvent.query
+            .filter_by(
+                user_id=current_user.user_id,
+                event_id=event_id
             )
+            .first()
         )
 
-        is_in_calendar = (
-            event_id
-            in calendar_ids
-        )
+        if calendar_entry:
+            is_in_calendar = True
+            current_calendar_date = (
+                calendar_entry.scheduled_date
+            )
 
     reviews = (
         Review.query
@@ -614,6 +617,7 @@ def event_details(event_id):
         reviews=reviews,
         is_favorited=is_favorited,
         is_in_calendar=is_in_calendar,
+        current_calendar_date=current_calendar_date,
     )
 
 
