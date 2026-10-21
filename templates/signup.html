@@ -4,36 +4,106 @@
 
 {% block content %}
 
+<style>
+  .password-field-wrapper {
+    position: relative;
+  }
+
+  .password-field-wrapper .login-input {
+    padding-right: 48px;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    padding: 4px;
+    cursor: pointer;
+    color: #6f685f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .password-toggle:hover {
+    color: #b48d5b;
+  }
+
+  .password-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .email-hint {
+    display: block;
+    margin-top: -7px;
+    margin-bottom: 14px;
+    color: #777;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+</style>
+
+
 <div class="auth-page">
   <div class="login-card">
-    <h2 class="login-title">Sign Up</h2>
+
+    <h2 class="login-title">
+      Sign Up
+    </h2>
+
 
     {# ── Validation errors (passed from auth.py as `errors` list) ── #}
     {% if errors %}
       <div class="auth-flash">
+
         {% if errors | length == 1 %}
+
           {{ errors[0] }}
+
         {% else %}
+
           <ul>
+
             {% for err in errors %}
               <li>{{ err }}</li>
             {% endfor %}
+
           </ul>
+
         {% endif %}
+
       </div>
     {% endif %}
 
+
     {# ── Flash messages (e.g. success redirect feedback) ── #}
     {% with messages = get_flashed_messages() %}
+
       {% if messages %}
+
         {% for message in messages %}
-          <div class="auth-flash">{{ message }}</div>
+
+          <div class="auth-flash">
+            {{ message }}
+          </div>
+
         {% endfor %}
+
       {% endif %}
+
     {% endwith %}
 
+
     {# ── Form — action/method unchanged from original backend ── #}
-    <form method="POST" action="{{ url_for('auth.signup') }}">
+    <form
+      method="POST"
+      action="{{ url_for('auth.signup') }}"
+    >
+
 
       {# Full name — repopulated on validation failure via `fullname` context var #}
       <input
@@ -42,8 +112,10 @@
         class="login-input"
         placeholder="Full Name"
         value="{{ fullname }}"
+        autocomplete="name"
         required
       >
+
 
       {# Email — repopulated on validation failure via `email` context var #}
       <input
@@ -52,28 +124,152 @@
         class="login-input"
         placeholder="Email"
         value="{{ email }}"
+        autocomplete="email"
+        aria-describedby="email-format-hint"
         required
       >
 
-      {# Password — never repopulated for security #}
-      <input
-        type="password"
-        name="password"
-        class="login-input"
-        placeholder="Password"
-        required
+      <small
+        id="email-format-hint"
+        class="email-hint"
       >
-      <small class="field-hint">
-        At least 8 characters, with an uppercase letter, a lowercase letter, a number, and a special character.
+        Enter a valid email address, for example:
+        name@example.com
       </small>
 
-      <button type="submit" class="login-btn-main">Create Account</button>
+
+      {# Password — never repopulated for security #}
+      <div class="password-field-wrapper">
+
+        <input
+          id="signup-password"
+          type="password"
+          name="password"
+          class="login-input"
+          placeholder="Password"
+          autocomplete="new-password"
+          required
+        >
+
+        <button
+          type="button"
+          id="toggle-signup-password"
+          class="password-toggle"
+          aria-label="Show password"
+          title="Show password"
+        >
+
+          <svg
+            id="password-eye-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"
+            ></path>
+
+            <circle
+              cx="12"
+              cy="12"
+              r="3"
+            ></circle>
+
+          </svg>
+
+        </button>
+
+      </div>
+
+
+      <small class="field-hint">
+        At least 8 characters, with an uppercase letter,
+        a lowercase letter, a number, and a special character.
+      </small>
+
+
+      <button
+        type="submit"
+        class="login-btn-main"
+      >
+        Create Account
+      </button>
+
     </form>
 
+
     <p class="signup-question">
+
       Already have an account?
-      <a href="{{ url_for('auth.login') }}">Login</a>
+
+      <a href="{{ url_for('auth.login') }}">
+        Login
+      </a>
+
     </p>
+
   </div>
 </div>
+
+
+<script>
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+      const passwordInput =
+        document.getElementById(
+          "signup-password"
+        );
+
+      const toggleButton =
+        document.getElementById(
+          "toggle-signup-password"
+        );
+
+      if (
+        !passwordInput ||
+        !toggleButton
+      ) {
+        return;
+      }
+
+      toggleButton.addEventListener(
+        "click",
+        function () {
+
+          const isHidden =
+            passwordInput.type ===
+            "password";
+
+          passwordInput.type =
+            isHidden
+              ? "text"
+              : "password";
+
+          toggleButton.setAttribute(
+            "aria-label",
+            isHidden
+              ? "Hide password"
+              : "Show password"
+          );
+
+          toggleButton.setAttribute(
+            "title",
+            isHidden
+              ? "Hide password"
+              : "Show password"
+          );
+
+        }
+      );
+
+    }
+  );
+</script>
+
 {% endblock %}
