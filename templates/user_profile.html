@@ -213,6 +213,7 @@
     font-size: 0.98rem;
     outline: none;
     transition: 0.22s ease;
+    box-sizing: border-box;
   }
 
   .profile-input:focus {
@@ -224,6 +225,39 @@
     background: var(--bg-soft);
     color: var(--text-soft);
     cursor: not-allowed;
+  }
+
+  .password-field-wrapper {
+    position: relative;
+  }
+
+  .password-field-wrapper .profile-input {
+    padding-right: 48px;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--text-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .password-toggle:hover {
+    color: var(--accent-dark);
+  }
+
+  .password-toggle svg {
+    width: 19px;
+    height: 19px;
+    display: block;
   }
 
   .password-divider {
@@ -260,23 +294,33 @@
 {% endblock %}
 
 {% block content %}
+
 <section class="user-profile-hero">
   <div class="page-shell">
     <h1>My Profile</h1>
-    <p>Manage your AFAQ account details, update your name, and change your password securely.</p>
+    <p>
+      Manage your AFAQ account details, update your name,
+      and change your password securely.
+    </p>
   </div>
 </section>
 
 <section class="user-profile-section">
+
   <div class="page-shell profile-layout">
+
     <aside class="profile-summary">
+
       <div class="profile-summary-top">
+
         <div class="profile-avatar-large">
           {{ current_user.fullname[0]|upper if current_user.fullname else 'U' }}
         </div>
+
       </div>
 
       <div class="profile-summary-body">
+
         <div class="profile-info-row">
           <label>Account Name</label>
           <div>{{ current_user.fullname }}</div>
@@ -288,53 +332,98 @@
         </div>
 
         <div class="profile-quicklinks">
-          <span class="profile-quicklinks-label">My AFAQ</span>
 
-          <a href="{{ url_for('favorites.favorites_page') }}" class="profile-quicklink">
+          <span class="profile-quicklinks-label">
+            My AFAQ
+          </span>
+
+          <a
+            href="{{ url_for('favorites.favorites_page') }}"
+            class="profile-quicklink"
+          >
             <span>Favorites</span>
             <span class="arrow-icon">&rarr;</span>
           </a>
 
-          <a href="{{ url_for('calendar.calendar_page') }}" class="profile-quicklink">
+          <a
+            href="{{ url_for('calendar.calendar_page') }}"
+            class="profile-quicklink"
+          >
             <span>Personal Calendar</span>
             <span class="arrow-icon">&rarr;</span>
           </a>
+
         </div>
+
       </div>
+
     </aside>
 
+
     <div class="profile-form-card">
+
       <h2>Update Account</h2>
 
       <p class="form-note">
-        You can update your display name. To change your password, enter your current password first. A verification code will be sent to your email before the password is updated.
+        You can update your display name. To change your password,
+        enter your current password first. A verification code will
+        be sent to your email before the password is updated.
       </p>
 
+
       {% with messages = get_flashed_messages() %}
+
         {% if messages %}
+
           {% for message in messages %}
-            <div class="success-flash">{{ message }}</div>
+
+            <div class="success-flash">
+              {{ message }}
+            </div>
+
           {% endfor %}
+
         {% endif %}
+
       {% endwith %}
 
+
       {% if errors %}
+
         <div class="auth-flash">
+
           {% if errors|length == 1 %}
+
             {{ errors[0] }}
+
           {% else %}
+
             <ul>
+
               {% for error in errors %}
                 <li>{{ error }}</li>
               {% endfor %}
+
             </ul>
+
           {% endif %}
+
         </div>
+
       {% endif %}
 
-      <form method="POST" class="profile-form">
+
+      <form
+        method="POST"
+        class="profile-form"
+      >
+
         <div class="form-group">
-          <label for="fullname">Full Name</label>
+
+          <label for="fullname">
+            Full Name
+          </label>
+
           <input
             id="fullname"
             type="text"
@@ -343,10 +432,16 @@
             class="profile-input"
             required
           >
+
         </div>
 
+
         <div class="form-group">
-          <label for="email">Email</label>
+
+          <label for="email">
+            Email
+          </label>
+
           <input
             id="email"
             type="email"
@@ -354,56 +449,276 @@
             class="profile-input"
             readonly
           >
+
         </div>
+
 
         <hr class="password-divider">
 
-        <h3 class="password-title">Change Password</h3>
+        <h3 class="password-title">
+          Change Password
+        </h3>
+
 
         <div class="form-group">
-          <label for="current_password">Current Password</label>
-          <input
-            id="current_password"
-            type="password"
-            name="current_password"
-            placeholder="Enter current password"
-            class="profile-input"
-          >
+
+          <label for="current_password">
+            Current Password
+          </label>
+
+          <div class="password-field-wrapper">
+
+            <input
+              id="current_password"
+              type="password"
+              name="current_password"
+              placeholder="Enter current password"
+              class="profile-input"
+              autocomplete="current-password"
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              data-target="current_password"
+              aria-label="Show password"
+              title="Show password"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"
+                ></path>
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="3"
+                ></circle>
+
+              </svg>
+
+            </button>
+
+          </div>
+
         </div>
 
+
         <div class="form-group">
-          <label for="new_password">New Password</label>
-          <input
-            id="new_password"
-            type="password"
-            name="new_password"
-            placeholder="Enter new password"
-            class="profile-input"
-          >
+
+          <label for="new_password">
+            New Password
+          </label>
+
+          <div class="password-field-wrapper">
+
+            <input
+              id="new_password"
+              type="password"
+              name="new_password"
+              placeholder="Enter new password"
+              class="profile-input"
+              autocomplete="new-password"
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              data-target="new_password"
+              aria-label="Show password"
+              title="Show password"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"
+                ></path>
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="3"
+                ></circle>
+
+              </svg>
+
+            </button>
+
+          </div>
 
           <small class="field-hint">
-            At least 8 characters, with an uppercase letter, a lowercase letter, a number, and a special character.
+            At least 8 characters, with an uppercase letter,
+            a lowercase letter, a number, and a special character.
           </small>
+
         </div>
+
 
         <div class="form-group">
-          <label for="confirm_password">Confirm New Password</label>
-          <input
-            id="confirm_password"
-            type="password"
-            name="confirm_password"
-            placeholder="Confirm new password"
-            class="profile-input"
-          >
+
+          <label for="confirm_password">
+            Confirm New Password
+          </label>
+
+          <div class="password-field-wrapper">
+
+            <input
+              id="confirm_password"
+              type="password"
+              name="confirm_password"
+              placeholder="Confirm new password"
+              class="profile-input"
+              autocomplete="new-password"
+            >
+
+            <button
+              type="button"
+              class="password-toggle"
+              data-target="confirm_password"
+              aria-label="Show password"
+              title="Show password"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"
+                ></path>
+
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="3"
+                ></circle>
+
+              </svg>
+
+            </button>
+
+          </div>
+
         </div>
 
+
         <div class="profile-actions">
-          <button type="submit" class="primary-btn save-btn">Save Changes</button>
-          <a href="{{ url_for('events.home') }}" class="outline-btn">Back Home</a>
-          <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+
+          <button
+            type="submit"
+            class="primary-btn save-btn"
+          >
+            Save Changes
+          </button>
+
+          <a
+            href="{{ url_for('events.home') }}"
+            class="outline-btn"
+          >
+            Back Home
+          </a>
+
+          <a
+            href="{{ url_for('auth.logout') }}"
+            class="logout-btn"
+          >
+            Logout
+          </a>
+
         </div>
+
       </form>
+
     </div>
+
   </div>
+
 </section>
+
+
+<script>
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+      const toggleButtons =
+        document.querySelectorAll(
+          ".password-toggle"
+        );
+
+      toggleButtons.forEach(
+        function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              const targetId =
+                button.getAttribute(
+                  "data-target"
+                );
+
+              const input =
+                document.getElementById(
+                  targetId
+                );
+
+              if (!input) {
+                return;
+              }
+
+              const isHidden =
+                input.type === "password";
+
+              input.type =
+                isHidden
+                  ? "text"
+                  : "password";
+
+              button.setAttribute(
+                "aria-label",
+                isHidden
+                  ? "Hide password"
+                  : "Show password"
+              );
+
+              button.setAttribute(
+                "title",
+                isHidden
+                  ? "Hide password"
+                  : "Show password"
+              );
+
+            }
+          );
+
+        }
+      );
+
+    }
+  );
+</script>
+
 {% endblock %}
