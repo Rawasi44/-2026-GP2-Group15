@@ -627,6 +627,7 @@
                         method="POST"
                         action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
                         class="calendar-remove-form"
+                        onsubmit="return confirm('Are you sure you want to remove this event from your personal calendar?');"
                       >
 
                         <input
@@ -664,7 +665,7 @@
 
       <div class="calendar-note">
         <span>
-          Events appear on the date they start.
+          Events appear on the date you plan to attend.
         </span>
 
         <a href="{{ url_for('events.events_page') }}">
@@ -710,7 +711,7 @@
                       </a>
 
                       <p>
-                        {{ event.start_date }}
+                        {{ day.date }}
 
                         {% if event.time %}
                           &nbsp;•&nbsp; {{ event.time }}
@@ -729,6 +730,7 @@
                     <form
                       method="POST"
                       action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
+                      onsubmit="return confirm('Are you sure you want to remove this event from your personal calendar?');"
                     >
 
                       <input
