@@ -4,48 +4,324 @@
 
 {% block content %}
 
+<style>
+  .auth-flash-success {
+    background: #eef7ee;
+    color: #2f6b3c;
+    border: 1px solid #b9d9c0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    font-size: 0.92rem;
+    text-align: center;
+  }
+
+  .password-field-wrapper {
+    position: relative;
+  }
+
+  .password-field-wrapper .login-input {
+    padding-right: 48px;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    padding: 4px;
+    cursor: pointer;
+    color: #6f685f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .password-toggle:hover {
+    color: #b48d5b;
+  }
+
+  .password-toggle svg {
+    width: 20px;
+    height: 20px;
+  }
+</style>
+
+
 <div class="auth-page hide-auth-buttons">
+
   <div class="login-card">
-    <h2 class="login-title">Verify Code</h2>
+
+    <h2 class="login-title">
+      Verify Code
+    </h2>
+
     <p class="auth-note">
-      Enter the 4-digit code sent to your email, then choose your new password.
+      Enter the 4-digit code sent to your email,
+      then choose your new password.
     </p>
 
+
+    {# Flash messages #}
     {% with messages = get_flashed_messages() %}
+
       {% if messages %}
+
         {% for message in messages %}
-          <div class="auth-flash">{{ message }}</div>
+
+          {% set msg_lower = message|lower %}
+
+          {% if
+            'sent' in msg_lower
+            and 'could not' not in msg_lower
+            and 'failed' not in msg_lower
+          %}
+
+            <div class="auth-flash-success">
+              {{ message }}
+            </div>
+
+          {% else %}
+
+            <div class="auth-flash">
+              {{ message }}
+            </div>
+
+          {% endif %}
+
         {% endfor %}
+
       {% endif %}
+
     {% endwith %}
 
+
+    {# Validation errors #}
     {% if errors %}
+
       <div class="auth-flash">
+
         {% if errors|length == 1 %}
+
           {{ errors[0] }}
+
         {% else %}
+
           <ul>
+
             {% for error in errors %}
               <li>{{ error }}</li>
             {% endfor %}
+
           </ul>
+
         {% endif %}
+
       </div>
+
     {% endif %}
 
-    <form method="POST" action="{{ url_for('auth.verify_reset_password_code') }}">
-      <input type="text" name="code" class="login-input" placeholder="4-digit code" maxlength="4" required>
-      <input type="password" name="new_password" class="login-input" placeholder="New password" required>
+
+    <form
+      method="POST"
+      action="{{ url_for('auth.verify_reset_password_code') }}"
+    >
+
+      <input
+        type="text"
+        name="code"
+        class="login-input"
+        placeholder="4-digit code"
+        maxlength="4"
+        inputmode="numeric"
+        pattern="[0-9]{4}"
+        autocomplete="one-time-code"
+        required
+      >
+
+
+      <div class="password-field-wrapper">
+
+        <input
+          id="reset-new-password"
+          type="password"
+          name="new_password"
+          class="login-input"
+          placeholder="New password"
+          autocomplete="new-password"
+          required
+        >
+
+        <button
+          type="button"
+          class="password-toggle"
+          data-target="reset-new-password"
+          aria-label="Show password"
+          title="Show password"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"
+            ></path>
+
+            <circle
+              cx="12"
+              cy="12"
+              r="3"
+            ></circle>
+          </svg>
+
+        </button>
+
+      </div>
+
+
       <small class="field-hint">
-        At least 8 characters, with an uppercase letter, a lowercase letter, a number, and a special character.
+        At least 8 characters, with an uppercase letter,
+        a lowercase letter, a number, and a special character.
       </small>
-      <input type="password" name="confirm_password" class="login-input" placeholder="Confirm new password" required>
-      <button type="submit" class="login-btn-main">Reset Password</button>
+
+
+      <div class="password-field-wrapper">
+
+        <input
+          id="reset-confirm-password"
+          type="password"
+          name="confirm_password"
+          class="login-input"
+          placeholder="Confirm new password"
+          autocomplete="new-password"
+          required
+        >
+
+        <button
+          type="button"
+          class="password-toggle"
+          data-target="reset-confirm-password"
+          aria-label="Show password"
+          title="Show password"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"
+            ></path>
+
+            <circle
+              cx="12"
+              cy="12"
+              r="3"
+            ></circle>
+          </svg>
+
+        </button>
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="login-btn-main"
+      >
+        Reset Password
+      </button>
+
     </form>
 
+
     <p class="signup-question">
-      <a href="{{ url_for('auth.forgot_password') }}">Send a new code</a>
+
+      <a href="{{ url_for('auth.forgot_password') }}">
+        Send a new code
+      </a>
+
     </p>
+
   </div>
+
 </div>
+
+
+<script>
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+      const buttons =
+        document.querySelectorAll(
+          ".password-toggle"
+        );
+
+      buttons.forEach(
+        function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              const targetId =
+                button.getAttribute(
+                  "data-target"
+                );
+
+              const input =
+                document.getElementById(
+                  targetId
+                );
+
+              if (!input) {
+                return;
+              }
+
+              const isHidden =
+                input.type === "password";
+
+              input.type =
+                isHidden
+                  ? "text"
+                  : "password";
+
+              button.setAttribute(
+                "aria-label",
+                isHidden
+                  ? "Hide password"
+                  : "Show password"
+              );
+
+              button.setAttribute(
+                "title",
+                isHidden
+                  ? "Hide password"
+                  : "Show password"
+              );
+
+            }
+          );
+
+        }
+      );
+
+    }
+  );
+</script>
+
 {% endblock %}
