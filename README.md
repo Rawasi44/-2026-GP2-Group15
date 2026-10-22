@@ -31,7 +31,6 @@ AFAQ aims to simplify event discovery through the following features:
 | AI Integration | Gemini API |
 
 ---
-
 ## 4. Launching the Project
 
 Follow these steps to run AFAQ locally:
@@ -42,40 +41,26 @@ Download the project from GitHub and open it in Visual Studio Code.
 
 ### Step 2: Start MAMP
 
-Open MAMP and start the local servers to enable MySQL.
+Open MAMP and start the local servers.
 
 ### Step 3: Set Up the Database
 
 1. Open phpMyAdmin through MAMP.
-2. Create a MySQL database named `afaq_db`.
-3. Import the `afaq_db.sql` file into the database.
+2. Create the MySQL database.
+3. Import the `afaq_db.sql` file.
 
-### Step 4: Install Dependencies
+### Step 4: Install python-dotenv
 
 Open the terminal in Visual Studio Code and run:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install python-dotenv
 ```
 
-If needed, install `python-dotenv`:
+### Step 5: Run the Application
 
-```bash
-pip install python-dotenv
-```
+Run the `app.py` file in Visual Studio Code.
 
-### Step 5: Configure the Project
-
-Configure the database connection and required environment variables according to the project settings.
-
-### Step 6: Run the Application
-
-Run the Flask application using:
-
-```bash
-python app.py
-```
-
-### Step 7: Open the Website
+### Step 6: Open the Website
 
 Open the local URL displayed in the terminal to access AFAQ.
