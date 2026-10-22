@@ -1,95 +1,73 @@
-<div align="center">
-
-# 🌐 AFAQ
-### Event Discovery Platform
-
-**Discover • Explore • Plan**
+# AFAQ – Event Discovery Platform
 
 A web-based platform for discovering and organizing events in Riyadh, Saudi Arabia.
 
 ---
 
-</div>
-
-## 📌 1. Project Title
+## 1. Project Title
 
 **AFAQ – Event Discovery Platform**
 
-A web-based platform designed to help residents and visitors discover and organize events in Riyadh, Saudi Arabia.
+AFAQ is designed to help residents and visitors discover and organize events in Riyadh.
 
----
+## 2. Product Goal
 
-## 🎯 2. Product Goal
-
-AFAQ aims to simplify event discovery by providing:
+AFAQ aims to simplify event discovery through the following features:
 
 - Event search and filtering
 - Favorites and personal calendars
 - Personalized event recommendations
 - AI-powered chatbot assistance
 
----
-
-## 🛠️ 3. Technologies
-
-AFAQ is developed using the following technologies:
+## 3. Technologies
 
 | Category | Technologies |
 |----------|--------------|
-| **Frontend** | HTML, CSS, JavaScript |
-| **Backend** | Python, Flask |
-| **Database** | MySQL |
-| **AI Integration** | Gemini API |
-| **Event Data** | JSON Dataset (`riyadh_events_v2.json`) |
+| Frontend | HTML, CSS, JavaScript |
+| Backend | Python, Flask |
+| Database | MySQL |
+| AI Integration | Gemini API |
 
----
 
-## 🚀 4. Launching the Project
 
-Follow these steps to run AFAQ locally.
+4. Launching the Project
 
-### Step 1: Clone the Repository
+Follow these steps to run AFAQ locally:
 
-```bash
-git clone <repository-url>
-```
+Step 1: Download the Project
 
-### Step 2: Navigate to the Project Directory
+Download the project from GitHub and open it in Visual Studio Code.
 
-```bash
-cd <project-folder>
-```
+Step 2: Start MAMP
 
-### Step 3: Install Dependencies
+Open MAMP and start the local servers to enable MySQL.
 
-```bash
+Step 3: Set Up the Database
+
+1. Open phpMyAdmin through MAMP.
+2. Create a MySQL database named afaq_db.
+3. Import the afaq_db.sql file into the database.
+
+Step 4: Install Dependencies
+
+Open the terminal in Visual Studio Code and run:
+
 pip install -r requirements.txt
-```
 
-### Step 4: Configure Environment Variables
+If needed, install python-dotenv:
 
-Create a `.env` file using `.env.example` as a reference and fill in the required configuration values.
+pip install python-dotenv
 
-Make sure your MySQL database is configured according to the project settings.
+Step 5: Configure the Project
 
-### Step 5: Run the Application
+Configure the database connection and required environment variables according to the project settings.
 
-```bash
+Step 6: Run the Application
+
+Run the Flask application using:
+
 python app.py
-```
 
-### Step 6: Open the Website
+Step 7: Open the Website
 
-Open the local address displayed in the terminal, typically:
-
-`http://127.0.0.1:5000`
-
----
-
-<div align="center">
-
-### AFAQ – Discover Events, Create Experiences.
-
-**King Saud University | Graduation Project 2026**
-
-</div>
+Open the local URL displayed in the terminal to access AFAQ.
