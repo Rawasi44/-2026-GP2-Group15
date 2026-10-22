@@ -9,7 +9,7 @@ A web-based platform for discovering and organizing events in Riyadh, Saudi Arab
 **AFAQ – Event Discovery Platform**
 
 AFAQ is designed to help residents and visitors discover and organize events in Riyadh.
----
+
 
 ## 2. Product Goal
 
