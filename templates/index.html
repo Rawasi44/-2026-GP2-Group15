@@ -378,7 +378,8 @@
           badge_text=event.category,
           meta_text=event.start_date ~ ' · ' ~ event.city,
           avg_rating=(event_ratings[event.id].avg if event_ratings and event.id in event_ratings else None),
-          is_favorited=(event.id in favorited_event_ids)
+          is_favorited=(event.id in favorited_event_ids),
+          explanation=(recommendation_reasons[event.id] if recommendation_reasons and event.id in recommendation_reasons else None)
         ) }}
       {% endfor %}
     </div>

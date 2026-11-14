@@ -10,3 +10,5 @@ openpyxl
 requests
 playwright
 scikit-learn
+python-dotenv
+google-genai

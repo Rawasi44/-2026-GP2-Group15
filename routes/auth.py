@@ -112,9 +112,9 @@ def login():
             if user.role != 'admin' and not user.is_verified:
                 try:
                     start_signup_verification(user)
-                    flash('Please verify your email to activate your account. A new verification code has been sent.')
+                    flash('Please verify your email to activate your account. A new verification code has been sent.', 'info')
                 except Exception:
-                    flash('Please verify your email to activate your account. We could not send a new code — try again shortly.')
+                    flash('Please verify your email to activate your account. We could not send a new code — try again shortly.', 'error')
                 return redirect(url_for('auth.verify_signup_code'))
 
             login_user(user)
@@ -123,7 +123,7 @@ def login():
                 return redirect(url_for('admin.admin_dashboard'))
             return redirect(url_for('events.home'))
 
-        flash('Invalid email or password')
+        flash('Invalid email or password', 'error')
 
     return render_template('login.html')
 
@@ -194,13 +194,15 @@ def signup():
         except Exception:
             flash(
                 'Account created, but the verification email could not be sent. '
-                'Please try resending the code.'
+                'Please try resending the code.',
+                'warning'
             )
             return redirect(url_for('auth.verify_signup_code'))
 
         flash(
             'A verification code has been sent to your email. '
-            'Please verify it to activate your account.'
+            'Please verify it to activate your account.',
+            'success'
         )
         return redirect(url_for('auth.verify_signup_code'))
 
@@ -218,7 +220,7 @@ def verify_signup_code():
         return redirect(url_for('events.home'))
 
     if not session.get('signup_verify_code') or not session.get('signup_verify_user_id'):
-        flash('Please sign up first.')
+        flash('Please sign up first.', 'warning')
         return redirect(url_for('auth.signup'))
 
     errors = []
@@ -245,7 +247,7 @@ def verify_signup_code():
 
         if not user:
             clear_signup_verification_session()
-            flash('Account not found. Please sign up again.')
+            flash('Account not found. Please sign up again.', 'error')
             return redirect(url_for('auth.signup'))
 
         user.is_verified = True
@@ -265,7 +267,8 @@ def verify_signup_code():
         clear_signup_verification_session()
 
         flash(
-            'Your email has been verified. Welcome to AFAQ!'
+            'Your email has been verified. Welcome to AFAQ!',
+            'success'
         )
         return redirect(url_for('events.home'))
 
@@ -278,7 +281,7 @@ def verify_signup_code():
 @auth_bp.route('/signup/resend', methods=['POST'])
 def resend_signup_code():
     if not session.get('signup_verify_user_id'):
-        flash('Please sign up first.')
+        flash('Please sign up first.', 'warning')
         return redirect(url_for('auth.signup'))
 
     user = User.query.get(
@@ -287,18 +290,20 @@ def resend_signup_code():
 
     if not user:
         clear_signup_verification_session()
-        flash('Account not found. Please sign up again.')
+        flash('Account not found. Please sign up again.', 'error')
         return redirect(url_for('auth.signup'))
 
     try:
         start_signup_verification(user)
         flash(
-            'A new verification code has been sent to your email.'
+            'A new verification code has been sent to your email.',
+            'success'
         )
     except Exception:
         flash(
             'Could not send the verification email. '
-            'Please check the mail settings and try again.'
+            'Please check the mail settings and try again.',
+            'error'
         )
 
     return redirect(url_for('auth.verify_signup_code'))
@@ -405,7 +410,8 @@ def user_profile():
                 )
 
             flash(
-                'A verification code has been sent to your email.'
+                'A verification code has been sent to your email.',
+                'success'
             )
 
             return redirect(
@@ -419,7 +425,8 @@ def user_profile():
         try:
             db.session.commit()
             flash(
-                'Profile updated successfully.'
+                'Profile updated successfully.',
+                'success'
             )
         except Exception:
             db.session.rollback()
@@ -452,7 +459,8 @@ def verify_profile_password_code():
 
     if not session.get('profile_password_code'):
         flash(
-            'No password change request was found.'
+            'No password change request was found.',
+            'warning'
         )
         return redirect(
             url_for('auth.user_profile')
@@ -506,7 +514,8 @@ def verify_profile_password_code():
 
         if not user:
             flash(
-                'User account not found.'
+                'User account not found.',
+                'error'
             )
             return redirect(
                 url_for('auth.login')
@@ -550,7 +559,8 @@ def verify_profile_password_code():
         )
 
         flash(
-            'Password updated successfully.'
+            'Password updated successfully.',
+            'success'
         )
         return redirect(
             url_for('auth.user_profile')
@@ -630,7 +640,8 @@ def forgot_password():
             )
 
         flash(
-            'A verification code has been sent to your email.'
+            'A verification code has been sent to your email.',
+            'success'
         )
 
         return redirect(
@@ -662,7 +673,8 @@ def verify_reset_password_code():
         'reset_password_user_id'
     ):
         flash(
-            'Please enter your email first.'
+            'Please enter your email first.',
+            'warning'
         )
         return redirect(
             url_for('auth.forgot_password')
@@ -742,7 +754,8 @@ def verify_reset_password_code():
             )
 
             flash(
-                'Account not found. Please try again.'
+                'Account not found. Please try again.',
+                'error'
             )
 
             return redirect(
@@ -781,7 +794,8 @@ def verify_reset_password_code():
 
         flash(
             'Password reset successfully. '
-            'Please log in with your new password.'
+            'Please log in with your new password.',
+            'success'
         )
 
         return redirect(

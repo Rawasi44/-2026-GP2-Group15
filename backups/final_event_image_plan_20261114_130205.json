@@ -1,0 +1,1170 @@
+[
+  {
+    "event_id": 1,
+    "title": "Human Capability Initiative Conference",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/Screen%20Shot%202026-02-12%20at%205.37.39%20AM.png",
+    "new_image": "/static/images/events/event_1.jpg",
+    "source": "https://x.com/HCI_KSA"
+  },
+  {
+    "event_id": 2,
+    "title": "24th ERRA Annual Conference",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/HG_hI6SbUAA3cxc.jpeg",
+    "new_image": "/static/images/events/event_2.webp",
+    "source": null
+  },
+  {
+    "event_id": 3,
+    "title": "Immersive Experience: Flying Over Saudi",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/Ticket_Banner_Feature_Event_1280_x_426%20%281%29.jpeg",
+    "new_image": "/static/images/events/event_3.jpg",
+    "source": null
+  },
+  {
+    "event_id": 5,
+    "title": "Saudi Makes Future AI Expo",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-09/We%20Saudi%20Make%20Future.jpg",
+    "new_image": "/static/images/events/event_5.png",
+    "source": "https://dynamics.sa/en/events/saudi-makes-future-ai-expo/"
+  },
+  {
+    "event_id": 6,
+    "title": "CPHI Middle East",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-09/GeghZxCWEAAbkY__0.jpeg",
+    "new_image": "/static/images/events/event_6.png",
+    "source": "https://www.cphi.com/middle-east/exhibit/exhibitor-essentials/"
+  },
+  {
+    "event_id": 7,
+    "title": "Future Projects Forum",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/1%201%20FwuJnp_WYAAJgoc.jpeg",
+    "new_image": "/static/images/events/event_7.webp",
+    "source": "https://sca.sa/en/news/future-projects-forum-and-exhibition-2026-announced"
+  },
+  {
+    "event_id": 8,
+    "title": "Poppy Playtime",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/1poppy-play-time-en-1759832539-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_8.jpg",
+    "source": null
+  },
+  {
+    "event_id": 10,
+    "title": "Information Security Event: Black Hat",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/X0AADF1U.jpg",
+    "new_image": "/static/images/events/event_10.jpg",
+    "source": "https://app.blackhatmea.com/event/black-hat-mea-2026-1"
+  },
+  {
+    "event_id": 11,
+    "title": "Industrial Transformation Saudi Arabia",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/Screen%20Shot%202026-01-26%20at%207.12.25%20AM.png",
+    "new_image": "/static/images/events/event_11.png",
+    "source": null
+  },
+  {
+    "event_id": 12,
+    "title": "Global Logistics Forum | UNCTAD Global Supply Chain Forum",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/logistics%20%281%29.jpg",
+    "new_image": "/static/images/events/event_12.jpg",
+    "source": null
+  },
+  {
+    "event_id": 13,
+    "title": "King Abdulaziz Falconry Festival",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-07/530.jpg",
+    "new_image": "/static/images/events/event_13.jpg",
+    "source": null
+  },
+  {
+    "event_id": 14,
+    "title": "Saudi Falcons Club Auction",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/Saudi%20Falcons%20Club%20Auction.jpg",
+    "new_image": "/static/images/events/event_14.jpg",
+    "source": null
+  },
+  {
+    "event_id": 15,
+    "title": "Esports Nations Cup",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/ezgif.com-webp-to-jpg-converter%20%2815%29.jpg",
+    "new_image": "/static/images/events/event_15.png",
+    "source": null
+  },
+  {
+    "event_id": 16,
+    "title": "General Aviation Airshow — AERO Middle East x Sand & Fun",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/5%20%282%29%20%282%29.jpg",
+    "new_image": "/static/images/events/event_16.jpg",
+    "source": null
+  },
+  {
+    "event_id": 17,
+    "title": "Solar & Storage Live",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/solar.jpg",
+    "new_image": "/static/images/events/event_17.gif",
+    "source": null
+  },
+  {
+    "event_id": 19,
+    "title": "Saudi Elenex",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/_AM.png",
+    "new_image": "/static/images/events/event_19.png",
+    "source": null
+  },
+  {
+    "event_id": 20,
+    "title": "Foodex Saudi",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/Screen%20Shot%202025-12-21%20at%204.39.38%20AM.png",
+    "new_image": "/static/images/events/event_20.png",
+    "source": null
+  },
+  {
+    "event_id": 21,
+    "title": "Intersec Saudi Arabia",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/fire%20safety%20Screen%20Shot%202024-06-09%20at%208.42.02%20AM.png",
+    "new_image": "/static/images/events/event_21.webp",
+    "source": null
+  },
+  {
+    "event_id": 22,
+    "title": "Misk Global Forum",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/AEKwR6.jpg",
+    "new_image": "/static/images/events/event_22.jpg",
+    "source": null
+  },
+  {
+    "event_id": 23,
+    "title": "Saudi Drone Exhibition SADEX",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/av%20Gz6twMVXwAAo6rK.jpeg",
+    "new_image": "/static/images/events/event_23.webp",
+    "source": null
+  },
+  {
+    "event_id": 24,
+    "title": "Seamless Saudi Arabia",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/seamless.jpeg",
+    "new_image": "/static/images/events/event_24.webp",
+    "source": "https://affmashup.com/events/seamless-saudi-arabia-2026"
+  },
+  {
+    "event_id": 25,
+    "title": "Saudi Build",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/testimonials-bg.jpg",
+    "new_image": "/static/images/events/event_25.jpg",
+    "source": null
+  },
+  {
+    "event_id": 26,
+    "title": "Global Health Exhibition",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/G4bbhaeXsAA6A8_.jpeg",
+    "new_image": "/static/images/events/event_26.avif",
+    "source": null
+  },
+  {
+    "event_id": 27,
+    "title": "Future Investment Initiative",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/Screen%20Shot%202026-01-25%20at%207.17.31%20AM.png",
+    "new_image": "/static/images/events/event_27.webp",
+    "source": null
+  },
+  {
+    "event_id": 28,
+    "title": "Global PropTech Summit",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/bg-new.png",
+    "new_image": "/static/images/events/event_28.png",
+    "source": null
+  },
+  {
+    "event_id": 29,
+    "title": "Saudi Agriculture",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/agriculture%20%282%29.jpg",
+    "new_image": "/static/images/events/event_29.png",
+    "source": null
+  },
+  {
+    "event_id": 30,
+    "title": "MIPIM Middle East",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/Screenshot%202025-03-16%20101331.png",
+    "new_image": "/static/images/events/event_30.jpg",
+    "source": null
+  },
+  {
+    "event_id": 31,
+    "title": "Jewels of the World – Autumn Edition",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/-copy.jpg",
+    "new_image": "/static/images/events/event_31.jpg",
+    "source": null
+  },
+  {
+    "event_id": 32,
+    "title": "World Stadiums and Arenas Summit | Athlete 360",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/king-salman-stadium-ezgif.com-webp-to-jpg-converter.jpg",
+    "new_image": "/static/images/events/event_32.webp",
+    "source": "https://saudicon.app/en/events/world-stadiums-and-arenas-summit-2026"
+  },
+  {
+    "event_id": 33,
+    "title": "WPC Energy Congress",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/36x864%5B1%5D.jpg",
+    "new_image": "/static/images/events/event_33.webp",
+    "source": null
+  },
+  {
+    "event_id": 34,
+    "title": "Metal & Steel Exhibition / FABEX",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/Metal%20%26%20Steel%20Exhibition.jpg%20%281%29.png",
+    "new_image": "/static/images/events/event_34.jpg",
+    "source": null
+  },
+  {
+    "event_id": 35,
+    "title": "Saudi Falcons & Hunting Exhibition",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/WoAA9PTR%20%281%29.jpg",
+    "new_image": "/static/images/events/event_35.jpg",
+    "source": "https://www.spa.gov.sa/en/N2690955"
+  },
+  {
+    "event_id": 36,
+    "title": "Riyadh Season: BLVD City",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/Page_Cover_1920_x_1280_compressed%20%281%29.jpg",
+    "new_image": "/static/images/events/event_36.jpg",
+    "source": "https://destinationksa.com/en/boulevard-city/"
+  },
+  {
+    "event_id": 37,
+    "title": "Melwah Falcon Racing",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/Melwah%20Falcon%20Racing%201.jpeg",
+    "new_image": "/static/images/events/event_37.jpg",
+    "source": null
+  },
+  {
+    "event_id": 39,
+    "title": "Saudi Procurement Conference",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/erter%20%2817%29.jpg",
+    "new_image": "/static/images/events/event_39.png",
+    "source": null
+  },
+  {
+    "event_id": 40,
+    "title": "CFO Leadership Summit",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/68ec852090a69.webp_.bv_resized_ipad.webp_.bv%5B1%5D.jpg",
+    "new_image": "/static/images/events/event_40.jpg",
+    "source": "https://gludo.org/en/events/1564-cfoleadershipsummit"
+  },
+  {
+    "event_id": 41,
+    "title": "Saudi Lifestyle Week",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/ezgif.com-webp-to-jpg-converter%20%289%29_0.jpg",
+    "new_image": "/static/images/events/event_41.png",
+    "source": null
+  },
+  {
+    "event_id": 42,
+    "title": "Global CSR Forum",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/slider-riyadh.jpg",
+    "new_image": "/static/images/events/event_42.webp",
+    "source": null
+  },
+  {
+    "event_id": 43,
+    "title": "E3 Customer Experience Conference",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/cx%201%20G2ANj9uXkAAToVW.jpeg",
+    "new_image": "/static/images/events/event_43.png",
+    "source": null
+  },
+  {
+    "event_id": 44,
+    "title": "The Saudi Food Show",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/F%20Gu_yE-xWIAAqBvu.jpeg",
+    "new_image": "/static/images/events/event_44.webp",
+    "source": null
+  },
+  {
+    "event_id": 45,
+    "title": "Facility Management Conference & Exhibition",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/Cover-Banner.png",
+    "new_image": "/static/images/events/event_45.png",
+    "source": null
+  },
+  {
+    "event_id": 46,
+    "title": "Global Infrastructure Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/1aa%20G0_n70NXgAAKThl.jpeg",
+    "new_image": "/static/images/events/event_46.png",
+    "source": null
+  },
+  {
+    "event_id": 47,
+    "title": "Global AI Summit (GAIN)",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/GAIN.jpg",
+    "new_image": "/static/images/events/event_47.webp",
+    "source": "https://thesauditimes.net/en/saudi-arabias-ai-authority-reveals-details-of-the-2026-global-ai-summit-gain/"
+  },
+  {
+    "event_id": 48,
+    "title": "Smart Cities Saudi Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/1%20G0_DaNaXUAABPHj.jpeg",
+    "new_image": "/static/images/events/event_48.png",
+    "source": null
+  },
+  {
+    "event_id": 49,
+    "title": "Money20/20 Middle East",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/Fin%20Tech%20event.png",
+    "new_image": "/static/images/events/event_49.webp",
+    "source": "https://www.arabnews.com/business/saudi-financial-sector-shows-resilience-in-q2-eyes-next-phase-under-vision-2030-says-minister-3001673"
+  },
+  {
+    "event_id": 50,
+    "title": "Riyadh Global Medical Biotechnology Summit",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/330000000100091.gif",
+    "new_image": "/static/images/events/event_50.jpg",
+    "source": null
+  },
+  {
+    "event_id": 51,
+    "title": "Kingdom Business Luxury Travel Congress",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/ezgif.com-webp-to-jpg-converter%20%2810%29.jpg",
+    "new_image": "/static/images/events/event_51.webp",
+    "source": "https://details.sa/en/archives/events/kingdom-luxury-business-travel-conference-2026"
+  },
+  {
+    "event_id": 52,
+    "title": "Hotel & Hospitality Expo",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/hospitality%20GzwL_uhXIAE-ADv.jpeg",
+    "new_image": "/static/images/events/event_52.jpg",
+    "source": "https://www.thehotelshowsaudiarabia.com/lp/visit/"
+  },
+  {
+    "event_id": 53,
+    "title": "Saudi Wood Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/Wood%20Show%20m%20%281%29.png",
+    "new_image": "/static/images/events/event_53.jpg",
+    "source": null
+  },
+  {
+    "event_id": 54,
+    "title": "Saudi Industrial Series",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/1%20Gz8L7L6WEAAvJTa.jpeg",
+    "new_image": "/static/images/events/event_54.webp",
+    "source": null
+  },
+  {
+    "event_id": 55,
+    "title": "Lighting Design & Technology Expo",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/F9MrkBoXUAAhGSl%20%281%29.jpeg",
+    "new_image": "/static/images/events/event_55.jpg",
+    "source": "https://gludo.org/events/1528-lightspacesaudiarabia"
+  },
+  {
+    "event_id": 56,
+    "title": "INDEX Saudi Arabia (Interior Design Trade Show)",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/111G0a3cQsWYAAEBi_.jpeg",
+    "new_image": "/static/images/events/event_56.png",
+    "source": null
+  },
+  {
+    "event_id": 57,
+    "title": "Saudi Food Manufacturing show",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/GxP8b3NaIAIaKWE.jpeg",
+    "new_image": "/static/images/events/event_57.webp",
+    "source": null
+  },
+  {
+    "event_id": 58,
+    "title": "Saudi WoodShow",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/w%204%20%281%29.png",
+    "new_image": "/static/images/events/event_58.webp",
+    "source": "https://details.sa/en/archives/events/wood-show2026"
+  },
+  {
+    "event_id": 59,
+    "title": "Merath – Middle East Museums & Heritage Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/merath-hero-3.jpg",
+    "new_image": "/static/images/events/event_59.png",
+    "source": null
+  },
+  {
+    "event_id": 60,
+    "title": "Saudi Light and Sound (SLS) Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-09/Untitled-1905-x-976-px-1910-x-980-px-ezgif.com-png-to-jpg-converter.jpg",
+    "new_image": "/static/images/events/event_60.png",
+    "source": null
+  },
+  {
+    "event_id": 61,
+    "title": "Saudi Entertainment and Amusement Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-09/Gre_nPTXsAADuqy.jpeg",
+    "new_image": "/static/images/events/event_61.png",
+    "source": null
+  },
+  {
+    "event_id": 62,
+    "title": "Saudi Warehousing & Logistics Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/GsCAI5HW8AAJ4iz.jpeg",
+    "new_image": "/static/images/events/event_62.png",
+    "source": null
+  },
+  {
+    "event_id": 63,
+    "title": "Horses and Equestrian Heritage Exhibition",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/Screenshot%202026-02-26%20133648.png",
+    "new_image": "/static/images/events/event_63.webp",
+    "source": null
+  },
+  {
+    "event_id": 64,
+    "title": "International Falcon Breeders Auction",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/International%20Falcon%20Breeders%20Auction.jpeg",
+    "new_image": "/static/images/events/event_64.jpg",
+    "source": null
+  },
+  {
+    "event_id": 65,
+    "title": "New Global Sport Conference",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/esports.jpg",
+    "new_image": "/static/images/events/event_65.webp",
+    "source": null
+  },
+  {
+    "event_id": 66,
+    "title": "Esports World Cup",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/Screenshot%202025-05-02%20110732.png",
+    "new_image": "/static/images/events/event_66.png",
+    "source": null
+  },
+  {
+    "event_id": 67,
+    "title": "Prince Faisal Bin Fahd Art Exhibition: Summer 2026",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/GyN7i2hWYAEFU3X.jpeg",
+    "new_image": "/static/images/events/event_67.webp",
+    "source": null
+  },
+  {
+    "event_id": 68,
+    "title": "Global AI Show",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/ezgif.com-webp-to-jpg-converter%20%2816%29.jpg",
+    "new_image": "/static/images/events/event_68.webp",
+    "source": null
+  },
+  {
+    "event_id": 69,
+    "title": "Apply for Japan International MANGA Award",
+    "basis": "generated-title-card",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/Here-Section-Cover.png",
+    "new_image": "/static/images/events/event_69.svg",
+    "source": "https://www.ksa.emb-japan.go.jp/itpr_ja/11_000001_00540.html"
+  },
+  {
+    "event_id": 70,
+    "title": "Middle East Poultry Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/Screen%20Shot%202026-01-05%20at%203.00.01%20AM.png",
+    "new_image": "/static/images/events/event_70.png",
+    "source": null
+  },
+  {
+    "event_id": 71,
+    "title": "Short Courses in Art & Craft",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/Royal%20Institute%20of%20Traditional%20Arts%20.5M1A856999%20%281%29.jpg",
+    "new_image": "/static/images/events/event_71.jpg",
+    "source": null
+  },
+  {
+    "event_id": 72,
+    "title": "Registration for Tuwaiq AI Camps and Programs",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-03/ezgif.com-webp-to-jpg-converter%20%2855%29.jpg",
+    "new_image": "/static/images/events/event_72.webp",
+    "source": null
+  },
+  {
+    "event_id": 73,
+    "title": "Saudi Food Expo",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/food%20expo.png",
+    "new_image": "/static/images/events/event_73.webp",
+    "source": "https://saudicon.app/en/events/saudi-food-expo-2026"
+  },
+  {
+    "event_id": 74,
+    "title": "HR Summit & Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/Gty3tgmWkAAHquR.jpeg",
+    "new_image": "/static/images/events/event_74.png",
+    "source": null
+  },
+  {
+    "event_id": 75,
+    "title": "Boulevard Flowers",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/3.jpg",
+    "new_image": "/static/images/events/event_75.webp",
+    "source": "https://www.sayidaty.net/بلس/أخبار/1833249-بوليفارد-فلاورز-يخطف-الأنظار-بـ200-مليون-زهرة-و2000-مجسم-فني"
+  },
+  {
+    "event_id": 76,
+    "title": "Registration: Emerging New Media Artists Program",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/2%20%284%29_1.jpg",
+    "new_image": "/static/images/events/event_76.webp",
+    "source": null
+  },
+  {
+    "event_id": 77,
+    "title": "International Schools Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/GrhXo9yXsAAlPzi.jpeg",
+    "new_image": "/static/images/events/event_77.png",
+    "source": null
+  },
+  {
+    "event_id": 78,
+    "title": "Of the Earth: Earthly Technologies to Computational Biologies",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/%D9%85%D8%B1%D9%83%D8%B2%20%D8%A7%D9%84%D8%AF%D8%B1%D8%B9%D9%8A%D8%A9%20%D9%84%D9%81%D9%86%D9%88%D9%86%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D9%82%D8%A8%D9%84%20%282%29.jpg",
+    "new_image": "/static/images/events/event_78.jpg",
+    "source": null
+  },
+  {
+    "event_id": 79,
+    "title": "Saudi Environment Week",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/copy-1200x802_0.jpg",
+    "new_image": "/static/images/events/event_79.jpg",
+    "source": null
+  },
+  {
+    "event_id": 81,
+    "title": "Gulf AI Symposium in Higher Education",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/HG6LU2BXcAAkZOv.jpeg",
+    "new_image": "/static/images/events/event_81.jpg",
+    "source": "https://x.com/PNU_EVENTS/status/2046254031312462176"
+  },
+  {
+    "event_id": 82,
+    "title": "Mishkat World",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/GZLmkNSXQAArGAJ.jpeg",
+    "new_image": "/static/images/events/event_82.webp",
+    "source": null
+  },
+  {
+    "event_id": 83,
+    "title": "War Castle",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/1ar-castle-ar-1760102109-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_83.jpg",
+    "source": null
+  },
+  {
+    "event_id": 84,
+    "title": "Escape Room: Secret of the Pharaoh",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/escape-room-secret-of-the-pharaoh-en-1759688892-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_84.jpg",
+    "source": "https://www.riyadhnight.com/en/e/escape-room-secret-of-the-pharaoh"
+  },
+  {
+    "event_id": 85,
+    "title": "Diriyah Contemporary Art Biennale",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/Screenshot%202026-01-31%20174443.png",
+    "new_image": "/static/images/events/event_85.jpg",
+    "source": null
+  },
+  {
+    "event_id": 86,
+    "title": "Doll Maker",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/doll-maker-en-1759919215-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_86.jpg",
+    "source": null
+  },
+  {
+    "event_id": 87,
+    "title": "Cultural Event: Al Samer & Al Muhawarah",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-03/AhrE9.jpg",
+    "new_image": "/static/images/events/event_87.webp",
+    "source": null
+  },
+  {
+    "event_id": 88,
+    "title": "Riyadh Season: BLVD World",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/BLVD%20World77%20%281%29.jpg",
+    "new_image": "/static/images/events/event_88.jpg",
+    "source": "https://x.com/RiyadhSeason/status/2049525356873277482"
+  },
+  {
+    "event_id": 89,
+    "title": "Swimming with Dolphins",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/%D8%A7%D9%84%D8%B3%D8%A8%D8%A7%D8%AD%D8%A9-%D9%85%D8%B9-%D8%A7%D9%84%D8%AF%D9%84%D8%A7%D9%81%D9%8A%D9%86-1500%20%281%29.jpg",
+    "new_image": "/static/images/events/event_89.jpg",
+    "source": null
+  },
+  {
+    "event_id": 90,
+    "title": "Midnight Manor​",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/midnight-manor-ar-1759915442-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_90.jpg",
+    "source": null
+  },
+  {
+    "event_id": 91,
+    "title": "BLVD World: 442 Football Park",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/442-football-park-en-1759686434-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_91.avif",
+    "source": "https://www.442footballparksa.com/"
+  },
+  {
+    "event_id": 92,
+    "title": "CoComelon Playdate",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/cocomelon-webooksizes-1280A%CC%83_426x%20%281%29.jpg",
+    "new_image": "/static/images/events/event_92.jpg",
+    "source": null
+  },
+  {
+    "event_id": 93,
+    "title": "Riyadh Season | AROYA Cruises",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/AC_-_Riyadh_Season_Announcement_Posts_-_Design__1920x1280__compressed_0.jpg",
+    "new_image": "/static/images/events/event_93.jpg",
+    "source": "https://cruiseindustrynews.com/cruise-news/2025/10/aroya-cruises-named-sponsor-of-2025-riyadh-season/"
+  },
+  {
+    "event_id": 94,
+    "title": "BLVD World: Meta World",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/Screen%20Shot%202025-10-20%20at%2012.15.36%20PM.png",
+    "new_image": "/static/images/events/event_94.jpg",
+    "source": null
+  },
+  {
+    "event_id": 95,
+    "title": "Battle Kart",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/battle-kart-en-1759929975-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_95.jpg",
+    "source": null
+  },
+  {
+    "event_id": 96,
+    "title": "BLVD Forest",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/Screen%20Shot%202025-10-21%20at%207.17.23%20AM.png",
+    "new_image": "/static/images/events/event_96.jpg",
+    "source": null
+  },
+  {
+    "event_id": 97,
+    "title": "PUBG Mobile",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/Screenshot%202025-10-28%20111038.png",
+    "new_image": "/static/images/events/event_97.jpg",
+    "source": null
+  },
+  {
+    "event_id": 98,
+    "title": "BLVD World: Oasis",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/Oasis%20%281%29.jpg",
+    "new_image": "/static/images/events/event_98.svg",
+    "source": null
+  },
+  {
+    "event_id": 99,
+    "title": "BLVD Dolphinarium",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/Screen%20Shot%202025-10-21%20at%207.05.56%20AM.png",
+    "new_image": "/static/images/events/event_99.jpg",
+    "source": "https://spa.gov.sa/N2024433"
+  },
+  {
+    "event_id": 100,
+    "title": "Cityscape Global",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/kG6I4DWUWEAAaGeD.jpeg",
+    "new_image": "/static/images/events/event_100.webp",
+    "source": null
+  },
+  {
+    "event_id": 101,
+    "title": "BLVD City: House of Hype",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-10/House%20of%20Hype%20%281%29.jpg",
+    "new_image": "/static/images/events/event_101.webp",
+    "source": "https://whatsonsaudiarabia.com/2024/08/you-can-now-visit-house-of-hype-at-boulevard-riyadh-city-for-free/"
+  },
+  {
+    "event_id": 102,
+    "title": "Music Festival: MDLBEAST SoundStorm",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/-venue-image-2%5B1%5D_0.jpg",
+    "new_image": "/static/images/events/event_102.jpg",
+    "source": "https://me.eventfaqs.com/mdlbeast-brings-back-soundstorm-festival-for-its-seventh-edition-in-december/"
+  },
+  {
+    "event_id": 103,
+    "title": "LEAP Tech Conference 2026",
+    "basis": "curated",
+    "old_image": "/static/uploads/LEAP.jpeg",
+    "new_image": "/static/images/events/event_103.jpg",
+    "source": "https://x.com/ciocoverage"
+  },
+  {
+    "event_id": 104,
+    "title": "IN ACT: Carl Cox & Dish Dash",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-04/DJ%20Riyadh%20Music%20lights%20techo%20%281%29%20%281%29.jpg",
+    "new_image": "/static/images/events/event_104.avif",
+    "source": "https://nofomo.com/events/in-act-act-viii"
+  },
+  {
+    "event_id": 105,
+    "title": "Riyadh Food Festival",
+    "basis": "generated-title-card",
+    "old_image": "/static/uploads/Picture3.png",
+    "new_image": "/static/images/events/event_105.svg",
+    "source": null
+  },
+  {
+    "event_id": 106,
+    "title": "Next-Gen IoT Expo",
+    "basis": "generated-title-card",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/iot_0.jpg",
+    "new_image": "/static/images/events/event_106.svg",
+    "source": null
+  },
+  {
+    "event_id": 107,
+    "title": "Industrial Transformation Saudi Arabia",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/Screen%20Shot%202026-01-26%20at%207.12.25%20AM.png",
+    "new_image": "/static/images/events/event_107.png",
+    "source": null
+  },
+  {
+    "event_id": 108,
+    "title": "Global Health Exhibition",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/G4bbhaeXsAA6A8_.jpeg",
+    "new_image": "/static/images/events/event_108.avif",
+    "source": null
+  },
+  {
+    "event_id": 109,
+    "title": "Venture Capital World Summit",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/KAFD-DJI_10004_0.jpg",
+    "new_image": "/static/images/events/event_109.jpg",
+    "source": null
+  },
+  {
+    "event_id": 110,
+    "title": "Global AI Summit (GAIN)",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-01/GAIN.jpg",
+    "new_image": "/static/images/events/event_110.jpg",
+    "source": null
+  },
+  {
+    "event_id": 111,
+    "title": "Beautyworld Saudi Arabia",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-09/beauty.png",
+    "new_image": "/static/images/events/event_111.webp",
+    "source": "https://www.jespackaging.com/events"
+  },
+  {
+    "event_id": 112,
+    "title": "Merath – Middle East Museums & Heritage Expo",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-02/merath-hero-3.jpg",
+    "new_image": "/static/images/events/event_112.webp",
+    "source": "https://blooloop.com/merath-expo-2026/"
+  },
+  {
+    "event_id": 113,
+    "title": "Saudi Light and Sound (SLS) Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-09/Untitled-1905-x-976-px-1910-x-980-px-ezgif.com-png-to-jpg-converter.jpg",
+    "new_image": "/static/images/events/event_113.png",
+    "source": null
+  },
+  {
+    "event_id": 114,
+    "title": "Saudi Entertainment and Amusement Expo",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-09/Gre_nPTXsAADuqy.jpeg",
+    "new_image": "/static/images/events/event_114.png",
+    "source": null
+  },
+  {
+    "event_id": 115,
+    "title": "E3 Customer Experience Conference",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/cx%201%20G2ANj9uXkAAToVW.jpeg",
+    "new_image": "/static/images/events/event_115.png",
+    "source": null
+  },
+  {
+    "event_id": 116,
+    "title": "Riyadh Racing Season",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/HUv_NWlWwAAeI5i.jpeg",
+    "new_image": "/static/images/events/event_116.jpg",
+    "source": null
+  },
+  {
+    "event_id": 117,
+    "title": "Riyadh International Humanitarian Forum",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-07/intro-bg%20%281%29.jpg",
+    "new_image": "/static/images/events/event_117.jpg",
+    "source": "https://www.spa.gov.sa/en/w2644123"
+  },
+  {
+    "event_id": 118,
+    "title": "Exhibition: Along the Way",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-09/MYr3KAKe7d2A9yKoooCOmSRJ69IISnk50V12mItGPfH.o23uViS%5B1%5D.jpg",
+    "new_image": "/static/images/events/event_118.webp",
+    "source": null
+  },
+  {
+    "event_id": 119,
+    "title": "AFC Asian Cup Saudi Arabia 2027™ Tickets",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-05/ac27_web_banner_0.jpg",
+    "new_image": "/static/images/events/event_119.jpg",
+    "source": null
+  },
+  {
+    "event_id": 120,
+    "title": "Saudi Media Forum and the Future of Media Exhibition (FOMEX)",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/GkJRYMVWcAAhEgp111%20%282%29.jpeg",
+    "new_image": "/static/images/events/event_120.jpg",
+    "source": null
+  },
+  {
+    "event_id": 121,
+    "title": "Future Minerals Forum",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/staytuned.jpg",
+    "new_image": "/static/images/events/event_121.jpg",
+    "source": null
+  },
+  {
+    "event_id": 122,
+    "title": "World Stadiums and Arenas Summit",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-09/about.jpg",
+    "new_image": "/static/images/events/event_122.webp",
+    "source": "https://saudicon.app/en/events/world-stadiums-and-arenas-summit-2026"
+  },
+  {
+    "event_id": 123,
+    "title": "World Stadiums, Arenas Summit, Athlete 360",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2025-12/king-salman-stadium-ezgif.com-webp-to-jpg-converter.jpg",
+    "new_image": "/static/images/events/event_123.webp",
+    "source": "https://saudicon.app/en/events/world-stadiums-and-arenas-summit-2026"
+  },
+  {
+    "event_id": 124,
+    "title": "Six Kings Slam",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-07/WQAAVZ5w.jpg",
+    "new_image": "/static/images/events/event_124.jpg",
+    "source": "https://webook.com/fr/SA/RUH/sports-event/events/six-kings-slam-rs27-tickets"
+  },
+  {
+    "event_id": 125,
+    "title": "Asian Indoor and Martial Arts Games",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-05/_17853000324651174_3292621591780340508_n.jpg",
+    "new_image": "/static/images/events/event_125.jpg",
+    "source": null
+  },
+  {
+    "event_id": 126,
+    "title": "Riyadh International Book Fair",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-09/Riyadh%20Reads%20%281%29.png",
+    "new_image": "/static/images/events/event_126.jpg",
+    "source": null
+  },
+  {
+    "event_id": 127,
+    "title": "BIO Middle East (BIOME)",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-05/iddle%2520East_Website%2520Header_2115x1227_72ppi.jpg%5B1%5D.jpg",
+    "new_image": "/static/images/events/event_127.webp",
+    "source": null
+  },
+  {
+    "event_id": 128,
+    "title": "International Engineering Conference (IECE)",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-07/Engg.jpg",
+    "new_image": "/static/images/events/event_128.jpg",
+    "source": "https://www.spa.gov.sa/ar/N2642966"
+  },
+  {
+    "event_id": 129,
+    "title": "Saudi International Rehab Expo",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-08/G5aZvPhXoAAByt1%20%281%29.jpeg",
+    "new_image": "/static/images/events/event_129.jpg",
+    "source": "https://twitter.com/SaudirehabExpo/status/1635280299830706177"
+  },
+  {
+    "event_id": 130,
+    "title": "Global Airports Forum",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-09/Airport.png",
+    "new_image": "/static/images/events/event_130.jpg",
+    "source": null
+  },
+  {
+    "event_id": 131,
+    "title": "National Center for Falcons Auction",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-07/0097.jpg",
+    "new_image": "/static/images/events/event_131.jpg",
+    "source": null
+  },
+  {
+    "event_id": 132,
+    "title": "Conference: XP Music Futures",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-07/xp%20confrence%20ezgif.com-gif-maker%20%287%29%20%281%29%20%281%29.jpg",
+    "new_image": "/static/images/events/event_132.png",
+    "source": null
+  },
+  {
+    "event_id": 133,
+    "title": "6th United Nations World Data Forum 2026",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-07/riyadh%20%2859%29.jpg",
+    "new_image": "/static/images/events/event_133.png",
+    "source": "https://unstats.un.org/unsd/undataforum/"
+  },
+  {
+    "event_id": 134,
+    "title": "Build Your House exhibition",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-05/WwAAe0Ak.jpg",
+    "new_image": "/static/images/events/event_134.webp",
+    "source": "https://saudicon.app/en/events/build-your-house-saudi-2026"
+  },
+  {
+    "event_id": 135,
+    "title": "DGA Innovation Challenge – Pitches and Evaluation",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/3GXgAwcU3E.jpg",
+    "new_image": "/static/images/events/event_135.webp",
+    "source": "https://saudicon.app/ar/events/govjam-2026"
+  },
+  {
+    "event_id": 136,
+    "title": "Pet & Vet Expo",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-05/G6nqZrpXQAA2MT8.jpeg",
+    "new_image": "/static/images/events/event_136.jpg",
+    "source": "https://dynamics.sa/en/events/saudi-pet-and-vet-expo-2026/"
+  },
+  {
+    "event_id": 137,
+    "title": "Cat Show",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-05/ad6a12b653df86b_1779611219-0-en1779611313.jpg%5B1%5D.jpg",
+    "new_image": "/static/images/events/event_137.jpg",
+    "source": null
+  },
+  {
+    "event_id": 138,
+    "title": "International Trenchless Tunnelling Conference",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-08/54612553001_beb1e2590b_h_0.jpg",
+    "new_image": "/static/images/events/event_138.webp",
+    "source": "https://details.sa/en/archives/events/international-conference-on-trenchless-excavation-and-tunneling-technologies-2026"
+  },
+  {
+    "event_id": 139,
+    "title": "Saudi Statistics Forum",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-06/Gpjip1DWIAAE86n.jpeg",
+    "new_image": "/static/images/events/event_139.jpg",
+    "source": null
+  },
+  {
+    "event_id": 140,
+    "title": "Tuwaiq: A Journey Through Museums",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/RUtXgAAtUfV.jpg",
+    "new_image": "/static/images/events/event_140.webp",
+    "source": null
+  },
+  {
+    "event_id": 141,
+    "title": "Quarter Tone Exhibition",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/GqwEk2xWEAAORgg.jpeg",
+    "new_image": "/static/images/events/event_141.jpg",
+    "source": "https://www.sayidaty.net/"
+  },
+  {
+    "event_id": 142,
+    "title": "WWE Crown Jewel",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/jewel-rs27-en-1790770939-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_142.jpg",
+    "source": "https://www.wwe.com/article/riyadh-to-host-wwe-crown-jewel-on-saturday-november-7"
+  },
+  {
+    "event_id": 143,
+    "title": "CONTINUUM 26 Exhibition",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-08/3_2.jpg",
+    "new_image": "/static/images/events/event_143.webp",
+    "source": "https://www.arabnews.com/art-culture/diriyah-art-futures-opens-second-edition-of-continuum-exhibition-3000469"
+  },
+  {
+    "event_id": 144,
+    "title": "Darah Event",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/1apmhen8sayb%20%281%29.jpg",
+    "new_image": "/static/images/events/event_144.jpg",
+    "source": "https://www.hiamag.com/ترفيه-وفنون/فنون/1805908-هذه-أبرز-المعارض-الفنية-التي-تحتضنها-الرياض-في-أكتوبر"
+  },
+  {
+    "event_id": 145,
+    "title": "Boxing event: Mexico vs The World",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/the-world-en.jpg",
+    "new_image": "/static/images/events/event_145.jpg",
+    "source": "https://webook.com/en/sa/ruh/sports-event/events/the-mexico-vs-the-world-rs27-tickets-467828"
+  },
+  {
+    "event_id": 146,
+    "title": "Kings League MENA",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-09/775468959_17904288924497626_2787953900865748705_n.jpg",
+    "new_image": "/static/images/events/event_146.webp",
+    "source": "https://me.eventfaqs.com/surj-sports-investment-and-kings-league-bring-mena-football-season-to-riyadh/"
+  },
+  {
+    "event_id": 147,
+    "title": "Real Estate Supply Chain Forum",
+    "basis": "existing-local",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-07/faisaliah%20hotel%20%281%29.jpeg",
+    "new_image": "/static/images/events/event_147.png",
+    "source": null
+  },
+  {
+    "event_id": 148,
+    "title": "Banking AI and Analytics Summit",
+    "basis": "generated-title-card",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/Screenshot%202026-10-03%20143144.png",
+    "new_image": "/static/images/events/event_148.svg",
+    "source": null
+  },
+  {
+    "event_id": 149,
+    "title": "Comedy Play: \"I Don't Know Myself\" (Ana Mesh Arefny)",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/i-dont-know-myself-en-1791970566-mobile_poster.jpg",
+    "new_image": "/static/images/events/event_149.webp",
+    "source": "https://www.masrawy.com/arts/zoom/details/2026/10/15/3062972/"
+  },
+  {
+    "event_id": 150,
+    "title": "Comedy Play: Sugar Daddy",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/dadd.jpg",
+    "new_image": "/static/images/events/event_150.webp",
+    "source": "https://grintahub.sa/events/sugar-daddy-theater-in-riyadh-22-october-first-show-at-730-pm"
+  },
+  {
+    "event_id": 151,
+    "title": "Fadel Chaker's concert: “Awdat Alghaib”",
+    "basis": "curated",
+    "old_image": "https://api.riyadh.sa/sites/default/files/2026-10/fadel-.jpg",
+    "new_image": "/static/images/events/event_151.jpg",
+    "source": "https://arenahub.sa/events/fadel-shaker-riyadh-2026-tickets"
+  }
+]

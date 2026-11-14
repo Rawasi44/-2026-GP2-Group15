@@ -16,7 +16,10 @@ from services.activity_service import (
     get_user_calendar_ids,
 )
 
-from services.recommendation_service import get_recommendations_for_user
+from services.recommendation_service import (
+    get_recommendations_for_user,
+    explain_recommendations,
+)
 
 
 events_bp = Blueprint("events", __name__)
@@ -240,6 +243,15 @@ def home():
     else:
         recommended_events = []
 
+    recommendation_reasons = (
+        explain_recommendations(
+            current_user.user_id,
+            recommended_events
+        )
+        if current_user.is_authenticated
+        else {}
+    )
+
     # ---------------------------------------------------------
     # Ratings shown on cards
     # ---------------------------------------------------------
@@ -283,6 +295,7 @@ def home():
         top_rated_events=top_rated_events,
         ending_today_events=ending_today_events,
         recommended_events=recommended_events,
+        recommendation_reasons=recommendation_reasons,
         event_ratings=event_ratings,
         favorited_event_ids=favorited_event_ids
     )

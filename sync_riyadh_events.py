@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 from datetime import datetime, date
 from sqlalchemy import create_engine, text
@@ -87,17 +88,25 @@ def json_safe(value):
 # LOAD JSON
 # ============================================================
 
-def load_new_events():
+def load_new_events(json_path=None):
+    """
+    Loads the candidate-events JSON. Defaults to the existing
+    JSON_PATH (riyadh_events_v2.json) exactly as before -- passing an
+    explicit json_path (e.g. from a CLI argument) lets you preview a
+    separate candidate file without touching that default file.
+    """
+
+    json_path = json_path or JSON_PATH
 
     if not os.path.exists(
-        JSON_PATH
+        json_path
     ):
         raise FileNotFoundError(
-            f"Could not find:\n{JSON_PATH}"
+            f"Could not find:\n{json_path}"
         )
 
     with open(
-        JSON_PATH,
+        json_path,
         "r",
         encoding="utf-8"
     ) as file:
@@ -1045,12 +1054,22 @@ def main():
         "Preparing..."
     )
 
+    # Optional: pass an alternate candidate-events JSON file as the
+    # first CLI argument to preview it without touching the default
+    # riyadh_events_v2.json, e.g.:
+    #   python sync_riyadh_events.py riyadh_season_2026_candidates.json
+    json_path = sys.argv[1] if len(sys.argv) > 1 else JSON_PATH
+
+    print(
+        f"Candidate events file: {json_path}"
+    )
+
     engine = create_db_engine()
 
     try:
 
         new_events = (
-            load_new_events()
+            load_new_events(json_path)
         )
 
         print(
@@ -1120,13 +1139,13 @@ def main():
 
         print()
         print(
-            "Expected from our reviewed data:"
+            "This candidate file would result in:"
         )
 
         print(
-            "45 INSERT / "
-            "19 UPDATE / "
-            "1 inactive SKIP"
+            f"{len(plan['inserts'])} INSERT / "
+            f"{len(plan['updates'])} UPDATE / "
+            f"{len(plan['skipped_inactive'])} inactive SKIP"
         )
 
         print()

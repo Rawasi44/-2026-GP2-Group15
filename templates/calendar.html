@@ -2,6 +2,28 @@
 
 {% block title %}Personal Calendar | AFAQ{% endblock %}
 
+{% macro edit_time_button(entry, event, class_name) %}
+  {% set fully_official = entry.start_time_is_estimated == false and entry.end_time_is_estimated == false %}
+  {% if not fully_official %}
+    <button
+      type="button"
+      class="{{ class_name }}"
+      title="Edit time"
+      aria-label="Edit time for {{ event.title }}"
+      aria-haspopup="dialog"
+      aria-controls="calendar-time-dialog"
+      data-calendar-edit-time
+      data-action="{{ url_for('calendar.update_calendar_time', event_id=event.id) }}"
+      data-title="{{ event.title }}"
+      data-start="{{ entry.attendance_start_time.strftime('%H:%M') if entry.attendance_start_time else '' }}"
+      data-end="{{ entry.attendance_end_time.strftime('%H:%M') if entry.attendance_end_time else '' }}"
+      data-start-locked="{{ 'true' if entry.start_time_is_estimated == false else 'false' }}"
+    >
+      <span aria-hidden="true">&#9998;</span>{% if class_name == 'mobile-edit-time-btn' %} Edit time{% endif %}
+    </button>
+  {% endif %}
+{% endmacro %}
+
 {% block extra_styles %}
 <style>
   .calendar-hero {
@@ -303,6 +325,133 @@
     border-color: var(--danger-border);
   }
 
+  .calendar-edit-mini {
+    width: 27px;
+    height: 100%;
+    min-height: 37px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.18s ease;
+    flex-shrink: 0;
+  }
+
+  .calendar-edit-mini:hover {
+    color: var(--accent-dark);
+    background: var(--bg-soft);
+  }
+
+  .calendar-event-time.is-official {
+    color: #1f8a52;
+  }
+
+  .calendar-event-time.is-estimated {
+    color: var(--accent-dark);
+  }
+
+  .calendar-event-time.is-mixed {
+    color: #1f6f8a;
+  }
+
+  .calendar-time-dialog {
+    box-sizing: border-box;
+    width: min(390px, calc(100% - 32px));
+    max-height: calc(100% - 32px);
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card);
+    color: var(--text-main);
+    box-shadow: var(--shadow);
+  }
+
+  .calendar-time-dialog:not([open]) {
+    display: none;
+  }
+
+  .calendar-time-dialog::backdrop {
+    background: rgba(31, 29, 26, 0.42);
+  }
+
+  .calendar-time-dialog h2 {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+  }
+
+  .calendar-time-dialog [data-calendar-time-title] {
+    margin: 0 0 16px;
+    color: var(--text-soft);
+    overflow-wrap: anywhere;
+  }
+
+  .calendar-time-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 125px), 1fr));
+    gap: 12px;
+  }
+
+  .calendar-time-fields label {
+    display: grid;
+    gap: 5px;
+    color: var(--text-soft);
+    font-size: 0.84rem;
+    font-weight: 700;
+  }
+
+  .calendar-time-fields input {
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+    min-height: 38px;
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text-main);
+    font: inherit;
+  }
+
+  .calendar-time-fields input[readonly] {
+    background: var(--bg-soft);
+  }
+
+  .calendar-time-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .calendar-time-actions button,
+  .mobile-edit-time-btn {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: transparent;
+    color: var(--text-main);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .calendar-time-actions .calendar-edit-save {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--text-on-accent);
+  }
+
+  .mobile-event-actions {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
   /* Bottom note */
   .calendar-note {
     display: flex;
@@ -503,7 +652,6 @@
 </style>
 {% endblock %}
 
-
 {% block content %}
 
 <section class="calendar-hero">
@@ -515,7 +663,6 @@
     </p>
   </div>
 </section>
-
 
 <section class="calendar-section">
   <div class="page-shell">
@@ -555,7 +702,6 @@
         </div>
       </div>
 
-
       <div class="calendar-weekdays">
         <div class="calendar-weekday">Sun</div>
         <div class="calendar-weekday">Mon</div>
@@ -565,7 +711,6 @@
         <div class="calendar-weekday">Fri</div>
         <div class="calendar-weekday">Sat</div>
       </div>
-
 
       <div class="calendar-grid">
 
@@ -596,11 +741,11 @@
 
               </div>
 
-
               {% if day.in_current_month %}
                 <div class="day-events">
 
-                  {% for event in day.events %}
+                  {% for entry in day.events %}
+                    {% set event = entry.event %}
 
                     <div class="calendar-event-row">
 
@@ -614,7 +759,13 @@
                           {{ event.title }}
                         </span>
 
-                        {% if event.time %}
+                        {% if entry.attendance_start_time %}
+                          {% set both_official = entry.start_time_is_estimated == false and entry.end_time_is_estimated == false %}
+                          {% set both_estimated = entry.start_time_is_estimated == true and entry.end_time_is_estimated == true %}
+                          <span class="calendar-event-time {{ 'is-official' if both_official else ('is-mixed' if not both_estimated else 'is-estimated') }}">
+                            {{ entry.attendance_start_time.strftime('%H:%M') }}–{{ entry.attendance_end_time.strftime('%H:%M') if entry.attendance_end_time else '' }}
+                          </span>
+                        {% elif event.time %}
                           <span class="calendar-event-time">
                             {{ event.time }}
                           </span>
@@ -622,6 +773,7 @@
 
                       </a>
 
+                      {{ edit_time_button(entry, event, "calendar-edit-mini") }}
 
                       <form
                         method="POST"
@@ -647,6 +799,7 @@
 
                       </form>
 
+
                     </div>
 
                   {% endfor %}
@@ -662,7 +815,6 @@
 
       </div>
 
-
       <div class="calendar-note">
         <span>
           Events appear on the date you plan to attend.
@@ -675,7 +827,6 @@
 
     </div>
 
-
     <!-- Mobile selected-day details -->
     <div class="mobile-agenda">
 
@@ -685,7 +836,6 @@
           Select a day
         </h3>
       </div>
-
 
       {% for week in calendar_weeks %}
 
@@ -700,7 +850,8 @@
 
               {% if day.events %}
 
-                {% for event in day.events %}
+                {% for entry in day.events %}
+                  {% set event = entry.event %}
 
                   <div class="mobile-event-card">
 
@@ -713,7 +864,16 @@
                       <p>
                         {{ day.date }}
 
-                        {% if event.time %}
+                        {% if entry.attendance_start_time %}
+                          {% set mobile_both_official = entry.start_time_is_estimated == false and entry.end_time_is_estimated == false %}
+                          {% set mobile_both_estimated = entry.start_time_is_estimated == true and entry.end_time_is_estimated == true %}
+                          &nbsp;•&nbsp;
+                          {% if mobile_both_official %}Official
+                          {% elif mobile_both_estimated %}Suggested
+                          {% else %}Official start • Estimated end
+                          {% endif %}
+                          time: {{ entry.attendance_start_time.strftime('%H:%M') }}–{{ entry.attendance_end_time.strftime('%H:%M') if entry.attendance_end_time else '' }}
+                        {% elif event.time %}
                           &nbsp;•&nbsp; {{ event.time }}
                         {% endif %}
                       </p>
@@ -726,27 +886,29 @@
 
                     </div>
 
-
-                    <form
-                      method="POST"
-                      action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
-                      onsubmit="return confirm('Are you sure you want to remove this event from your personal calendar?');"
-                    >
-
-                      <input
-                        type="hidden"
-                        name="next"
-                        value="{{ url_for('calendar.calendar_page', year=year, month=month) }}"
+                    <div class="mobile-event-actions">
+                      {{ edit_time_button(entry, event, "mobile-edit-time-btn") }}
+                      <form
+                        method="POST"
+                        action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
+                        onsubmit="return confirm('Are you sure you want to remove this event from your personal calendar?');"
                       >
 
-                      <button
-                        type="submit"
-                        class="mobile-remove-btn"
-                      >
-                        Remove
-                      </button>
+                        <input
+                          type="hidden"
+                          name="next"
+                          value="{{ url_for('calendar.calendar_page', year=year, month=month) }}"
+                        >
 
-                    </form>
+                        <button
+                          type="submit"
+                          class="mobile-remove-btn"
+                        >
+                          Remove
+                        </button>
+
+                      </form>
+                    </div>
 
                   </div>
 
@@ -773,6 +935,27 @@
   </div>
 </section>
 
+<dialog class="calendar-time-dialog" id="calendar-time-dialog" aria-labelledby="calendar-time-dialog-heading" aria-describedby="calendar-time-event-title">
+  <h2 id="calendar-time-dialog-heading">Edit time</h2>
+  <p id="calendar-time-event-title" data-calendar-time-title></p>
+  <form method="POST" id="calendar-time-form">
+    <input type="hidden" name="next" value="{{ url_for('calendar.calendar_page', year=year, month=month) }}">
+    <div class="calendar-time-fields">
+      <label>
+        <span id="calendar-time-start-label">Start</span>
+        <input type="time" name="attendance_start_time">
+      </label>
+      <label>
+        <span id="calendar-time-end-label">End</span>
+        <input type="time" name="attendance_end_time">
+      </label>
+    </div>
+    <div class="calendar-time-actions">
+      <button type="button" id="calendar-time-cancel">Cancel</button>
+      <button type="submit" class="calendar-edit-save">Save time</button>
+    </div>
+  </form>
+</dialog>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -784,7 +967,6 @@
     const selectedDateTitle =
       document.getElementById("mobile-selected-date");
 
-
     function showDay(dayElement) {
 
       const dateValue =
@@ -793,31 +975,26 @@
       const dateLabel =
         dayElement.dataset.label;
 
-
       document
         .querySelectorAll(".mobile-day-panel")
         .forEach(function (panel) {
           panel.classList.remove("active");
         });
 
-
       const target =
         document.getElementById(
           "mobile-day-" + dateValue
         );
 
-
       if (target) {
         target.classList.add("active");
       }
-
 
       if (selectedDateTitle) {
         selectedDateTitle.textContent =
           dateLabel;
       }
     }
-
 
     calendarDays.forEach(function (day) {
 
@@ -839,12 +1016,10 @@
 
     });
 
-
     const todayCell =
       document.querySelector(
         ".calendar-day.today:not(.other-month)"
       );
-
 
     if (todayCell) {
       showDay(todayCell);
@@ -860,6 +1035,40 @@
       }
 
     }
+
+    const timeDialog = document.getElementById("calendar-time-dialog");
+    const timeForm = document.getElementById("calendar-time-form");
+    const start = timeForm.elements.namedItem("attendance_start_time");
+    const end = timeForm.elements.namedItem("attendance_end_time");
+    const startLabel = document.getElementById("calendar-time-start-label");
+    const endLabel = document.getElementById("calendar-time-end-label");
+    const eventTitle = document.getElementById("calendar-time-event-title");
+    let editButton = null;
+
+    document.querySelectorAll("[data-calendar-edit-time]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        editButton = button;
+        const { action, title, startLocked } = button.dataset;
+        timeForm.action = action;
+        eventTitle.textContent = title;
+        start.value = button.dataset.start;
+        end.value = button.dataset.end;
+        start.readOnly = startLocked === "true";
+        startLabel.textContent = start.readOnly ? "Start (official, fixed)" : "Start";
+        endLabel.textContent = start.readOnly ? "End (estimated)" : "End";
+
+        timeDialog.showModal();
+        (start.readOnly ? end : start).focus();
+      });
+    });
+
+    document.getElementById("calendar-time-cancel").addEventListener("click", function () {
+      timeDialog.close();
+    });
+
+    timeDialog.addEventListener("close", function () {
+      if (editButton) editButton.focus();
+    });
 
   });
 </script>

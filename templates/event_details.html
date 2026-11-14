@@ -66,21 +66,23 @@
 
 
 
+  {% set event_placeholder = url_for('static', filename='images/event-placeholder.svg') %}
+
   {% if event.image %}
 
-
-
-    <img src="{{ event.image }}" alt="{{ event.title }}">
-
-
+    <img
+      src="{{ event.image }}"
+      alt="{{ event.title }}"
+      data-fallback-src="{{ event_placeholder }}"
+      onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;"
+    >
 
   {% else %}
 
-
-
-    <img src="https://via.placeholder.com/1600x900?text=Event+Image" alt="Event Image">
-
-
+    <img
+      src="{{ event_placeholder }}"
+      alt="Event image unavailable"
+    >
 
   {% endif %}
 

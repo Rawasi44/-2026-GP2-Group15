@@ -40,6 +40,7 @@ from models.favorite import Favorite
 from models.calendar_event import CalendarEvent
 from models.rating import Rating
 from models.search import Search
+from models.user_preference import UserPreference
 
 
 try:
@@ -63,6 +64,12 @@ INTERACTION_WEIGHTS = {
     "rating_3": 2,
     "rating_low": 0,
     "search": 1,
+
+    # Explicit, chatbot-confirmed category preferences (Phase 4.2).
+    # Weighted lower than an actual Favorite/Calendar/Rating signal
+    # (a stated interest is a weaker signal than a demonstrated one),
+    # but higher than an incidental search term.
+    "explicit_preference": 2,
 }
 
 
@@ -340,6 +347,34 @@ def _gather_search_keywords(user_id):
     ]
 
 
+def _gather_explicit_preference_categories(user_id):
+    """
+    Return this user's confirmed UserPreference categories
+    (source == "chatbot_explicit" today, but any confirmed row counts).
+
+    These are combined into one text signal for the user profile,
+    the same way search keywords already are -- a stated interest is
+    treated as a category-level hint rather than tied to one event.
+    """
+
+    rows = (
+        UserPreference.query
+        .filter_by(
+            user_id=user_id
+        )
+        .all()
+    )
+
+    return [
+        row.category
+        for row in rows
+        if (
+            row.category
+            and row.category.strip()
+        )
+    ]
+
+
 # ---------------------------------------------------------------------------
 # Cold-start fallback
 # ---------------------------------------------------------------------------
@@ -516,9 +551,16 @@ def get_recommendations_for_user(
         )
     )
 
+    explicit_categories = (
+        _gather_explicit_preference_categories(
+            user_id
+        )
+    )
+
     has_signal = (
         bool(event_weights)
         or bool(search_keywords)
+        or bool(explicit_categories)
     )
 
     # Events already explicitly saved by the user.
@@ -662,6 +704,51 @@ def get_recommendations_for_user(
             pass
 
     # ---------------------------------------------------------
+    # Explicit preference signal (Phase 4.2)
+    #
+    # Confirmed UserPreference categories are injected the same
+    # way search keywords are: as text transformed through the
+    # SAME fitted vectorizer, weighted, and added into the user
+    # profile vector. This lets a brand-new user with zero
+    # Favorites/Calendar/Ratings but a confirmed interest still
+    # get a personalized (non-cold-start) profile.
+    # ---------------------------------------------------------
+
+    if (
+        explicit_categories
+        and INTERACTION_WEIGHTS[
+            "explicit_preference"
+        ] > 0
+    ):
+
+        preference_text = " ".join(
+            explicit_categories
+        )
+
+        try:
+
+            preference_vector = (
+                vectorizer.transform(
+                    [
+                        preference_text
+                    ]
+                )
+                * INTERACTION_WEIGHTS[
+                    "explicit_preference"
+                ]
+            )
+
+            user_vector = (
+                preference_vector
+                if user_vector is None
+                else user_vector
+                + preference_vector
+            )
+
+        except ValueError:
+            pass
+
+    # ---------------------------------------------------------
     # No usable profile
     # ---------------------------------------------------------
 
@@ -797,3 +884,82 @@ def get_recommendations_for_user(
                 break
 
     return result[:limit]
+
+
+# ---------------------------------------------------------------------------
+# Explainable recommendations (Phase 4.4)
+# ---------------------------------------------------------------------------
+
+def explain_recommendations(user_id, events):
+    """
+    Returns {event_id: explanation_string} for an already-ranked list of
+    events (e.g. the output of get_recommendations_for_user).
+
+    This is additive and display-only: it does not change ranking, does
+    not call the TF-IDF/cosine pipeline again, and every explanation it
+    produces is grounded in a real, queryable signal for this user --
+    never a fabricated or generic-sounding reason. If no specific signal
+    explains a given event, a plain "popular" fallback is used instead of
+    inventing a personalized-sounding reason.
+    """
+
+    if not user_id or not events:
+        return {}
+
+    favorite_ids = {
+        row.event_id
+        for row in Favorite.query.filter_by(user_id=user_id).all()
+    }
+
+    calendar_ids = {
+        row.event_id
+        for row in CalendarEvent.query.filter_by(user_id=user_id).all()
+    }
+
+    highly_rated_ids = {
+        row.event_id
+        for row in Rating.query.filter_by(user_id=user_id).all()
+        if row.value >= 3
+    }
+
+    preferred_categories = set(
+        _gather_explicit_preference_categories(user_id)
+    )
+
+    searched_terms = [
+        keyword.lower()
+        for keyword in _gather_search_keywords(user_id)
+    ]
+
+    explanations = {}
+    for event in events:
+        category = (event.category or "").strip()
+        title = (event.title or "").lower()
+
+        if category and category in preferred_categories:
+            explanations[event.id] = (
+                f"Matches your preferred category: {category}."
+            )
+        elif event.id in favorite_ids:
+            explanations[event.id] = (
+                "Similar to events you added to Favorites."
+            )
+        elif event.id in calendar_ids:
+            explanations[event.id] = (
+                "Similar to events in your Personal Calendar."
+            )
+        elif event.id in highly_rated_ids:
+            explanations[event.id] = (
+                "Similar to events you rated highly."
+            )
+        elif category and any(
+            term in category.lower() or term in title
+            for term in searched_terms
+        ):
+            explanations[event.id] = "Based on your recent searches."
+        elif category:
+            explanations[event.id] = f"Popular in {category}."
+        else:
+            explanations[event.id] = "Popular with AFAQ users."
+
+    return explanations

@@ -210,10 +210,101 @@
     line-height: 1.55;
   }
 
-  .smart-time {
+  .smart-explain {
+    font-style: italic;
+    opacity: 0.85;
+  }
+
+  .smart-reason {
     color: var(--accent-dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+
+  .smart-timing-warning {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: #fff4e0;
+    color: #8a5a00;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .smart-item.needs-confirmation {
+    background: rgba(255, 196, 0, 0.06);
+    border-radius: 12px;
+  }
+
+  .smart-result-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .smart-accept-all,
+  .smart-regenerate {
+    font: inherit;
+    font-weight: 800;
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+  }
+
+  .smart-accept-all {
+    border: 0;
+    background: var(--accent);
+    color: var(--text-on-accent);
+  }
+
+  .smart-regenerate {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-main);
+  }
+
+  .smart-remove {
+    border: 1px solid var(--danger-border);
+    background: var(--card);
+    color: var(--danger);
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.82rem;
+    border-radius: 8px;
+    padding: 7px 10px;
+    cursor: pointer;
+  }
+
+  .smart-item-removed {
+    display: none !important;
+  }
+
+  .smart-item-saved {
+    opacity: 0.55;
+  }
+
+  .smart-time {
     font-weight: 800;
     white-space: nowrap;
+  }
+
+  .smart-time-official {
+    color: #1f8a52;
+  }
+
+  .smart-time-estimated {
+    color: var(--accent-dark);
+  }
+
+  .smart-time-tentative {
+    color: #8a5a00;
+  }
+
+  .smart-time-mixed {
+    color: #1f6f8a;
   }
 
   .smart-item-actions {
@@ -542,9 +633,14 @@
 
 
       <p class="smart-note">
-        Suggested visit times are 90-minute planning estimates within
-        listed opening hours, not official session times or bookings.
-        Please check the official event link before attending.
+        When an event lists a verified fixed session (for example a
+        football match or theatre show), AFAQ shows that
+        <strong>official time</strong> and never moves it. Otherwise,
+        AFAQ shows an <strong>estimated attendance time</strong> sized
+        to the type of event, inside its listed hours. When an event
+        has no reliable listed time at all, AFAQ says so instead of
+        guessing. These are planning aids, not bookings -- please
+        check the official event link before attending.
       </p>
 
     </div>
@@ -581,8 +677,18 @@
         <p class="smart-note smart-result-note">
           These are personalized suggestions only.
           Nothing is automatically added to your Personal Calendar.
-          Use the "Save to Calendar" button for the events you choose.
+          Review them below, remove anything you don't want, then either
+          save individual events or accept the whole schedule.
         </p>
+
+        <div class="smart-result-actions">
+          <button type="button" class="smart-accept-all" id="smart-accept-all">
+            Accept Schedule
+          </button>
+          <button type="button" class="smart-regenerate" id="smart-regenerate">
+            Regenerate Schedule
+          </button>
+        </div>
 
 
         {% set total = namespace(value=0) %}
@@ -613,17 +719,29 @@
               {% set total.value = total.value + 1 %}
 
 
-              <div class="smart-item">
+              <div
+                class="smart-item {{ 'needs-confirmation' if item.needs_time_confirmation else '' }}"
+                data-smart-item
+                data-event-id="{{ item.event_id }}"
+                data-date="{{ item.date.isoformat() }}"
+              >
+{% set event_placeholder = url_for('static', filename='images/event-placeholder.svg') %}
 
-                {% if item.event.image %}
-
-                  <img
-                    src="{{ item.event.image }}"
-                    alt="{{ item.event.title }}"
-                  >
-
-                {% endif %}
-
+{% if item.event.image %}
+  <img
+    src="{{ item.event.image }}"
+    alt="{{ item.event.title }}"
+    loading="lazy"
+    data-fallback-src="{{ event_placeholder }}"
+    onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;"
+  >
+{% else %}
+  <img
+    src="{{ event_placeholder }}"
+    alt="Event image unavailable"
+    loading="lazy"
+  >
+{% endif %}
 
                 <div class="smart-item-main">
 
@@ -640,21 +758,59 @@
                     {{ item.event.category }}
                     ·
                     Listed hours:
-                    {{ item.listed_hours }}
+                    {{ item.listed_hours or "Not listed" }}
                   </p>
+
+                  {% if item.recommendation_reason %}
+                    <p class="smart-reason">{{ item.recommendation_reason }}</p>
+                  {% endif %}
+
+                  {% if item.explanation %}
+                    <p class="smart-explain">{{ item.explanation }}</p>
+                  {% endif %}
+
+                  {% if item.needs_time_confirmation %}
+                    <span class="smart-timing-warning">
+                      &#9888; {{ item.timing_warning }}
+                    </span>
+                  {% endif %}
 
                 </div>
 
 
-                <span class="smart-time">
-                  Suggested:
-                  {{ item.suggested_start }}
-                  –
-                  {{ item.suggested_end }}
-                </span>
+                {% if item.needs_time_confirmation %}
+                  <span class="smart-time smart-time-tentative">
+                    Time to be confirmed
+                  </span>
+                {% elif item.start_time_is_estimated == false and item.end_time_is_estimated == false %}
+                  <span class="smart-time smart-time-official">
+                    Official time:
+                    {{ item.suggested_start }}
+                    –
+                    {{ item.suggested_end }}
+                  </span>
+                {% elif item.start_time_is_estimated == false and item.end_time_is_estimated == true %}
+                  <span class="smart-time smart-time-mixed">
+                    Official start • Estimated end:
+                    {{ item.suggested_start }}
+                    –
+                    {{ item.suggested_end }}
+                  </span>
+                {% else %}
+                  <span class="smart-time smart-time-estimated">
+                    Suggested attendance time:
+                    {{ item.suggested_start }}
+                    –
+                    {{ item.suggested_end }}
+                  </span>
+                {% endif %}
 
 
                 <div class="smart-item-actions">
+
+                  <button type="button" class="smart-remove" data-smart-remove>
+                    Remove
+                  </button>
 
                   <form
                     method="POST"
@@ -891,4 +1047,170 @@
   })();
 </script>
 
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+  /*
+   * Smart Schedule review actions (Final Sprint Priority 1.5 / 2):
+   * - "Remove" hides a suggestion from this view and excludes it from
+   *   "Accept Schedule" -- nothing is saved for it.
+   * - Each "Save to Calendar" button now posts via fetch so saving one
+   *   event never reloads the page or destroys the rest of the
+   *   generated schedule.
+   * - "Accept Schedule" saves every suggestion still visible, one at a
+   *   time, reusing the exact same server-validated save endpoint and
+   *   security check as a single manual save.
+   * - "Regenerate Schedule" simply re-submits the planning form above
+   *   with the same inputs, asking the server for a fresh proposal.
+   */
+  (function () {
+    "use strict";
+
+    const saveUrl = "{{ url_for('smart_schedule.save_schedule') }}";
+
+    function toast(message, kind) {
+      const existing = document.getElementById("afaq-toast");
+      if (existing) existing.remove();
+      const el = document.createElement("div");
+      el.id = "afaq-toast";
+      el.className = "afaq-toast afaq-toast-" + (kind || "success");
+      el.setAttribute("role", "status");
+      el.textContent = message;
+      document.body.appendChild(el);
+      requestAnimationFrame(function () {
+        el.classList.add("afaq-toast-visible");
+      });
+      window.setTimeout(function () {
+        el.classList.remove("afaq-toast-visible");
+        window.setTimeout(function () {
+          el.remove();
+        }, 220);
+      }, 2800);
+    }
+
+    function saveItem(itemEl) {
+      const form = itemEl.querySelector(".smart-save-form");
+      if (!form) return Promise.resolve({ ok: false, message: "Nothing to save." });
+
+      return fetch(saveUrl, {
+        method: "POST",
+        body: new FormData(form),
+        credentials: "same-origin",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+      })
+        .then(function (response) {
+          const contentType = response.headers.get("content-type") || "";
+          if (!contentType.includes("application/json")) {
+            window.location.href = response.url || saveUrl;
+            return null;
+          }
+          return response.json();
+        })
+        .catch(function () {
+          return { ok: false, message: "Network error while saving." };
+        });
+    }
+
+    document.addEventListener("submit", function (event) {
+      const form = event.target;
+      if (!form.classList || !form.classList.contains("smart-save-form")) return;
+      if (typeof window.fetch !== "function") return;
+
+      event.preventDefault();
+
+      const itemEl = form.closest("[data-smart-item]");
+      const button = form.querySelector(".smart-save");
+      if (button.disabled) return;
+      button.disabled = true;
+
+      saveItem(itemEl).then(function (data) {
+        button.disabled = false;
+        if (!data) return;
+        toast(data.message, data.ok ? "success" : "warning");
+        if (data.ok && data.saved) {
+          itemEl.classList.add("smart-item-saved");
+          button.textContent = "Saved";
+        }
+      });
+    });
+
+    document.addEventListener("click", function (event) {
+      const removeBtn = event.target.closest("[data-smart-remove]");
+      if (removeBtn) {
+        const itemEl = removeBtn.closest("[data-smart-item]");
+        if (itemEl) {
+          itemEl.classList.add("smart-item-removed");
+        }
+        return;
+      }
+
+      if (event.target.id === "smart-regenerate") {
+        const form = document.getElementById("smart-schedule-form");
+        if (form) {
+          if (typeof form.requestSubmit === "function") {
+            form.requestSubmit();
+          } else {
+            form.submit();
+          }
+        }
+        return;
+      }
+
+      if (event.target.id === "smart-accept-all") {
+        const button = event.target;
+        if (button.disabled) return;
+
+        const items = Array.prototype.filter.call(
+          document.querySelectorAll("[data-smart-item]"),
+          function (el) {
+            return (
+              !el.classList.contains("smart-item-removed") &&
+              !el.classList.contains("smart-item-saved")
+            );
+          }
+        );
+
+        if (items.length === 0) {
+          toast("Nothing left to accept.", "warning");
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Saving...";
+
+        let savedCount = 0;
+        let index = 0;
+
+        function next() {
+          if (index >= items.length) {
+            button.disabled = false;
+            button.textContent = "Accept Schedule";
+            toast(
+              savedCount + " of " + items.length + " event(s) saved to your Personal Calendar.",
+              savedCount > 0 ? "success" : "warning"
+            );
+            return;
+          }
+
+          const itemEl = items[index];
+          index += 1;
+
+          saveItem(itemEl).then(function (data) {
+            if (data && data.ok && data.saved) {
+              savedCount += 1;
+              itemEl.classList.add("smart-item-saved");
+              const saveBtn = itemEl.querySelector(".smart-save");
+              if (saveBtn) saveBtn.textContent = "Saved";
+            }
+            next();
+          });
+        }
+
+        next();
+      }
+    });
+  })();
+</script>
 {% endblock %}

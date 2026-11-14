@@ -432,6 +432,15 @@ a.event-card:hover .event-card-img {
   flex-shrink: 0;
 }
 
+.event-card-explain {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--text-on-ink-soft);
+  opacity: 0.85;
+}
+
 .event-card-arrow {
   width: 30px;
   height: 30px;
@@ -815,4 +824,245 @@ a.event-card:hover .event-card-arrow {
     background: transparent;
     color: var(--text-on-ink);
   }
+}
+
+/* ---------------------------------------------------------------------
+   AFAQ Chatbot widget — fully isolated under .afaq-chat-*. Never shares
+   a class name with any public or admin component, by design (lesson
+   from an earlier admin-dashboard CSS collision in this project).
+--------------------------------------------------------------------- */
+
+.afaq-chat-root {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 999;
+}
+
+.afaq-chat-bubble {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-size: 1.5rem;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.afaq-chat-panel {
+  position: absolute;
+  right: 0;
+  bottom: 70px;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  height: 460px;
+  max-height: 70vh;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.afaq-chat-panel[hidden] {
+  display: none !important;
+}
+
+.afaq-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--ink);
+  color: var(--text-on-ink);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.afaq-chat-close {
+  background: none;
+  border: none;
+  color: var(--text-on-ink);
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.afaq-chat-messages {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.afaq-chat-msg {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.afaq-chat-msg-user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.afaq-chat-msg-assistant {
+  align-self: flex-start;
+  background: var(--card);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+
+.afaq-chat-pref-confirm {
+  align-self: flex-start;
+  max-width: 90%;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.afaq-chat-pref-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.afaq-chat-pref-yes,
+.afaq-chat-pref-no {
+  flex: 1;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.afaq-chat-pref-yes {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border-color: var(--accent);
+}
+
+.afaq-chat-pref-no {
+  background: var(--card);
+  color: var(--text-main);
+}
+
+.afaq-chat-loading,
+.afaq-chat-error {
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  flex-shrink: 0;
+}
+
+.afaq-chat-error {
+  color: var(--danger);
+}
+
+.afaq-chat-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  background: var(--paper);
+  flex-shrink: 0;
+}
+
+.afaq-chat-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: var(--card);
+  color: var(--text-main);
+}
+
+.afaq-chat-send {
+  width: 40px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: var(--text-on-accent);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .afaq-chat-root {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .afaq-chat-panel {
+    width: calc(100vw - 24px);
+    height: 65vh;
+  }
+}
+
+/* ===========================================================
+   AFAQ AJAX toast (Final Sprint Priority 2 -- favorite toggling
+   without a page reload). Scoped under its own .afaq-toast-*
+   namespace, same discipline as the chatbot widget above, to
+   avoid any collision with existing page styles.
+   =========================================================== */
+
+.afaq-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translate(-50%, 12px);
+  z-index: 2000;
+  max-width: calc(100vw - 32px);
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #fff;
+  background: #1f8a52;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.afaq-toast-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.afaq-toast-warning {
+  background: #b5872b;
+}
+
+.fav-btn-loading {
+  opacity: 0.6;
+  cursor: wait;
 }

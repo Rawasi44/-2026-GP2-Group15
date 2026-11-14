@@ -17,13 +17,185 @@ from datetime import date, timedelta
 
 from models.calendar_event import CalendarEvent
 from models.event import Event
-from services.recommendation_service import get_recommendations_for_user
+from services.recommendation_service import (
+    explain_recommendations,
+    get_recommendations_for_user,
+)
 
 
 MAX_HORIZON_DAYS = 90
 
-VISIT_MINUTES = 90
 BUFFER_MINUTES = 30
+
+# ---------------------------------------------------------------------------
+# Adaptive attendance duration (Phase 5.2)
+#
+# Replaces a single fixed visit length for every event with event-type-aware
+# estimates. Classification uses category + title + description keywords --
+# deliberately simple, maintainable rules rather than an ML model, which is
+# both explainable in a viva and appropriate for AFAQ's catalog size.
+#
+# AFAQ's Event model has no verified official per-visit duration field (only
+# a listed opening-hours string), so every value below is a SUGGESTED VISIT
+# DURATION, never presented as an official duration.
+#
+# Fixed-duration events: the suggested duration approximates how long the
+# whole activity itself typically runs (a match, a show, a screening).
+# Flexible-duration events: the venue is open far longer than any one
+# visit; the suggested duration is how long a typical visit would be.
+# ---------------------------------------------------------------------------
+
+FIXED_DURATION_EVENT_TYPES = {
+    "football_match": {
+        "keywords": ("football", "soccer", "match", "كرة القدم", "مباراة"),
+        "minutes": 120,
+        "label": "football match",
+    },
+    "theatre": {
+        "keywords": ("theatre", "theater", "play", "مسرح", "مسرحية"),
+        "minutes": 120,
+        "label": "theatre performance",
+    },
+    "cinema": {
+        "keywords": ("cinema", "movie", "screening", "سينما", "فيلم"),
+        "minutes": 120,
+        "label": "cinema screening",
+    },
+    "workshop": {
+        "keywords": ("workshop", "ورشة"),
+        "minutes": 150,
+        "label": "workshop",
+    },
+    "concert": {
+        "keywords": ("concert", "حفل", "حفلة"),
+        "minutes": 150,
+        "label": "concert",
+    },
+    "sports_general": {
+        "keywords": ("tournament", "دوري", "رياضي"),
+        "minutes": 120,
+        "label": "sports event",
+    },
+}
+
+FLEXIBLE_DURATION_EVENT_TYPES = {
+    "exhibition": {
+        "keywords": ("exhibition", "معرض", "معارض"),
+        "minutes": 120,
+        "label": "exhibition",
+    },
+    "festival": {
+        "keywords": ("festival", "مهرجان"),
+        "minutes": 150,
+        "label": "festival",
+    },
+    "conference": {
+        "keywords": ("conference", "مؤتمر"),
+        "minutes": 180,
+        "label": "conference",
+    },
+}
+
+DEFAULT_SUGGESTED_VISIT_MINUTES = 90
+
+
+def classify_event_duration(event):
+    """
+    Returns (bucket, duration_minutes, type_label).
+
+    bucket is "fixed" or "flexible". When no keyword matches, falls back
+    to a flexible "event" bucket with the previous universal default so
+    behavior degrades gracefully instead of guessing.
+    """
+    haystack = " ".join(
+        part for part in (event.category, event.title, event.description) if part
+    ).lower()
+
+    for info in FIXED_DURATION_EVENT_TYPES.values():
+        if any(keyword in haystack for keyword in info["keywords"]):
+            return "fixed", info["minutes"], info["label"]
+
+    for info in FLEXIBLE_DURATION_EVENT_TYPES.values():
+        if any(keyword in haystack for keyword in info["keywords"]):
+            return "flexible", info["minutes"], info["label"]
+
+    return "flexible", DEFAULT_SUGGESTED_VISIT_MINUTES, "event"
+
+
+def describe_suggested_duration(bucket, minutes, type_label, duration_is_estimated=True):
+    """
+    Builds the user-facing explanation string (Phase 5.5 / 1.3).
+
+    duration_is_estimated distinguishes an AFAQ guess from a verified
+    official session length (a genuine two-time listed range for a
+    fixed-bucket event) -- an official duration is never described as
+    "suggested".
+    """
+    hours, mins = divmod(minutes, 60)
+    if hours and mins:
+        duration_text = f"{hours}h {mins}m"
+    elif hours:
+        duration_text = f"{hours} hour" if hours == 1 else f"{hours} hours"
+    else:
+        duration_text = f"{mins} minutes"
+
+    if bucket == "fixed" and not duration_is_estimated:
+        return f"Official {duration_text} session length for this {type_label}."
+
+    if bucket == "fixed":
+        return (
+            f"Estimated {duration_text} visit, based on the official "
+            f"start time for this {type_label} (no official end time "
+            f"was listed)."
+        )
+
+    return f"Suggested {duration_text} visit based on the event type ({type_label})."
+
+
+# ---------------------------------------------------------------------------
+# Phase 1.6 correction: a single "is this time estimated" boolean cannot
+# represent a MIXED slot (an official, unmovable start time with an
+# AFAQ-estimated end/duration -- e.g. a football match that officially
+# starts at 20:00 but has no listed official end, so the end is AFAQ's
+# own duration estimate). Two independent flags are tracked instead:
+#
+#   start_time_is_estimated / end_time_is_estimated
+#     False -> that boundary is the event's own verified, listed value.
+#     True  -> AFAQ selected or estimated that boundary.
+#     None  -> no time was saved at all for this entry.
+#
+# This lets exactly three real cases be represented, plus "no time
+# saved":
+#   (False, False) -> fully official
+#   (True,  True)  -> fully estimated/flexible
+#   (False, True)  -> mixed: official start, estimated end
+#   (None,  None)  -> no time saved (date-only)
+# ---------------------------------------------------------------------------
+
+def describe_time_basis(start_time_is_estimated, end_time_is_estimated):
+    """
+    User-facing label for a saved or proposed attendance time, from the
+    two independent estimate flags above. Returns None when no time is
+    saved (both flags None) -- callers should show "Time to be
+    confirmed" or nothing in that case, never a time-basis label.
+    """
+    if start_time_is_estimated is None or end_time_is_estimated is None:
+        return None
+
+    if not start_time_is_estimated and not end_time_is_estimated:
+        return "Official time"
+
+    if start_time_is_estimated and end_time_is_estimated:
+        return "Suggested attendance time"
+
+    if not start_time_is_estimated and end_time_is_estimated:
+        return "Official start • Estimated end"
+
+    # start estimated, end official -- not produced by AFAQ's own
+    # scheduling logic today, but handled so no caller ever crashes or
+    # mislabels an estimate as official.
+    return "Estimated start • Official end"
+
 
 # The numbered choices available in the interface.
 # "Any" is handled separately as None.
@@ -80,14 +252,21 @@ def _minutes(hours, minutes, ampm=None):
 
 def parse_event_hours(raw):
     """
-    Return the event opening interval as:
+    Return the event's listed time information as:
 
         (start_minutes, end_minutes)
 
     or None if the value cannot be interpreted safely.
 
-    If the end time is earlier than the start time,
-    it is treated as a next-day closing time.
+    - A real two-time range ("16:00 - 23:59") returns a genuine
+      (start, end) pair. If the end time is earlier than the start
+      time, it is treated as a next-day closing time.
+    - A single declared time ("16:00") returns (start, None). That is
+      the event's stated START time only -- NOT a stated end time, so
+      no official closing time is invented here. Callers must size the
+      suggested visit using the event's own adaptive visit_minutes
+      (see classify_event_duration) within the day/preferred-time
+      window instead of a fabricated end boundary.
     """
 
     if not raw or not isinstance(raw, str):
@@ -150,7 +329,7 @@ def parse_event_hours(raw):
         ):
             return (
                 start,
-                start + VISIT_MINUTES,
+                None,
             )
 
     return None
@@ -187,33 +366,49 @@ def _find_visit_slot(
     event_hours,
     window,
     busy,
+    visit_minutes=DEFAULT_SUGGESTED_VISIT_MINUTES,
 ):
     """
-    Find a possible 90-minute visit slot.
+    Find a possible visit slot of `visit_minutes` length (the event-type-
+    aware estimate from classify_event_duration -- see Phase 5.2).
+
+    event_hours is (start, end), where end may be None when the event
+    only lists a single start time and no official closing time (see
+    parse_event_hours). When end is None, the search window is bounded
+    only by the user's preferred time window and the day itself -- never
+    by an invented event closing time, so an adaptive visit_minutes
+    longer than some old universal default can still be placed.
 
     A 30-minute buffer is kept between suggested
     visits to avoid producing an unrealistic schedule.
     """
 
+    event_start, event_end = event_hours
+
     start = max(
-        event_hours[0],
+        event_start,
         window[0],
     )
 
     stop = min(
-        event_hours[1],
         window[1],
         24 * 60,
     )
 
+    if event_end is not None:
+        stop = min(
+            stop,
+            event_end,
+        )
+
     for proposed in range(
         start,
-        stop - VISIT_MINUTES + 1,
+        stop - visit_minutes + 1,
         15,
     ):
         end = (
             proposed
-            + VISIT_MINUTES
+            + visit_minutes
         )
 
         no_conflict = all(
@@ -470,6 +665,15 @@ def generate_smart_schedule(
         )
     ]
 
+    # Phase 1.1/1.4: "why was this event recommended" -- grounded in
+    # the same real signals (ratings/favorites/calendar/explicit
+    # preferences/search) already used for the homepage, not a
+    # separate guess. Computed once for the whole eligible pool.
+    recommendation_reasons = explain_recommendations(
+        user_id,
+        eligible,
+    )
+
     used_ids = set()
 
     generated = []
@@ -519,27 +723,140 @@ def generate_smart_schedule(
             ):
                 continue
 
+            (
+                duration_bucket,
+                visit_minutes,
+                type_label,
+            ) = classify_event_duration(event)
+
             hours = parse_event_hours(
                 event.time
             )
 
             if hours is None:
-                # Do not invent hours when the event's
-                # actual time information is unclear.
+                # Phase 1.3: do not invent hours when the event's
+                # actual time information is unclear -- but surface it
+                # as a clearly-tentative suggestion instead of silently
+                # dropping a personally relevant event. The user must
+                # confirm the exact time themselves before attending.
+                items.append(
+                    {
+                        "event": event,
+                        "event_id": event.id,
+                        "date": day,
+                        "suggested_start": None,
+                        "suggested_end": None,
+                        "listed_hours": event.time,
+                        "visit_minutes": visit_minutes,
+                        "duration_bucket": duration_bucket,
+                        "needs_time_confirmation": True,
+                        "start_time_is_estimated": None,
+                        "end_time_is_estimated": None,
+                        "time_label": None,
+                        "recommendation_reason": recommendation_reasons.get(
+                            event.id
+                        ),
+                        "explanation": describe_suggested_duration(
+                            duration_bucket,
+                            visit_minutes,
+                            type_label,
+                        ),
+                        "timing_warning": (
+                            "No reliable listed time was found for this "
+                            "event. Confirm the exact time on the "
+                            "official event link before attending."
+                        ),
+                    }
+                )
+
+                used_ids.add(
+                    event.id
+                )
+
                 continue
 
-            slot = _find_visit_slot(
-                hours,
-                TIME_WINDOWS[
-                    preferred_time
-                ],
-                busy,
-            )
+            event_start, event_end = hours
 
-            if slot is None:
-                continue
+            if duration_bucket == "fixed":
+                # ---------------------------------------------------
+                # Phase 1.3: a fixed-session event (football match,
+                # theatre, cinema, concert, workshop...) is never
+                # shifted to another start time. Its official start
+                # is event_start, full stop -- it is only ever offered
+                # if that official start actually falls inside the
+                # user's chosen preferred-time window, never moved
+                # into it.
+                # ---------------------------------------------------
+                slot_start = event_start
 
-            start, end = slot
+                # The start is always official for a fixed-bucket event
+                # (it is never shifted -- see the window check below).
+                start_is_estimated = False
+
+                if event_end is not None:
+                    # A genuine two-time listed range -- the end is
+                    # ALSO the verified official session end. Fully
+                    # official case.
+                    slot_end = event_end
+                    end_is_estimated = False
+                else:
+                    # Only a start time was listed. MIXED case: the
+                    # start is official, but the end is AFAQ's own
+                    # duration estimate for this event type.
+                    slot_end = event_start + visit_minutes
+                    end_is_estimated = True
+
+                window_start, window_end = TIME_WINDOWS[preferred_time]
+
+                fits_preferred_window = (
+                    window_start
+                    <= slot_start
+                    < window_end
+                )
+
+                no_conflict = all(
+                    (
+                        slot_end + BUFFER_MINUTES
+                        <= taken_start
+                    )
+                    or (
+                        slot_start
+                        >= taken_end + BUFFER_MINUTES
+                    )
+                    for (
+                        taken_start,
+                        taken_end,
+                    ) in busy
+                )
+
+                if not fits_preferred_window or not no_conflict:
+                    # A fixed session cannot be moved to fit -- if it
+                    # doesn't fit this window/day, it is simply not
+                    # offered for it (never shifted).
+                    continue
+
+                start, end = slot_start, slot_end
+
+            else:
+                # Flexible event: AFAQ itself selects a suitable
+                # sub-window inside the listed operating hours. This
+                # chosen attendance time is always an estimate, never
+                # an official session time.
+                slot = _find_visit_slot(
+                    hours,
+                    TIME_WINDOWS[
+                        preferred_time
+                    ],
+                    busy,
+                    visit_minutes,
+                )
+
+                if slot is None:
+                    continue
+
+                start, end = slot
+                start_is_estimated = True
+                end_is_estimated = True
 
             items.append(
                 {
@@ -559,11 +876,34 @@ def generate_smart_schedule(
                     "listed_hours": (
                         event.time
                     ),
+                    "visit_minutes": visit_minutes,
+                    "duration_bucket": duration_bucket,
+                    "needs_time_confirmation": False,
+                    "start_time_is_estimated": start_is_estimated,
+                    "end_time_is_estimated": end_is_estimated,
+                    "time_label": describe_time_basis(
+                        start_is_estimated,
+                        end_is_estimated,
+                    ),
+                    "recommendation_reason": recommendation_reasons.get(
+                        event.id
+                    ),
+                    "explanation": describe_suggested_duration(
+                        duration_bucket,
+                        visit_minutes,
+                        type_label,
+                        # The duration itself is an estimate whenever
+                        # the END boundary is an estimate (fully
+                        # official and mixed-with-official-end cases
+                        # are the only ones where it isn't).
+                        duration_is_estimated=end_is_estimated,
+                    ),
+                    "timing_warning": None,
                 }
             )
 
             busy.append(
-                slot
+                (start, end)
             )
 
             used_ids.add(
@@ -581,3 +921,62 @@ def generate_smart_schedule(
         )
 
     return generated
+
+
+def minutes_from_time(value):
+    """Convert a datetime.time (or None) to minutes since midnight."""
+    if value is None:
+        return None
+    return value.hour * 60 + value.minute
+
+
+def find_calendar_time_conflict(
+    user_id,
+    scheduled_date,
+    start_minutes,
+    end_minutes,
+    exclude_calendar_entry_id=None,
+):
+    """
+    Phase 1.7: check a proposed attendance time against the user's
+    OTHER Personal Calendar entries already saved for that same date.
+
+    Only entries that already have a saved attendance time are
+    considered -- a date-only entry (no time saved) has nothing to
+    conflict with here, matching the grouping AFAQ already uses.
+
+    Returns the conflicting CalendarEvent, or None if there is no
+    conflict (respecting the same BUFFER_MINUTES transition buffer
+    Smart Schedule itself uses).
+    """
+    query = CalendarEvent.query.filter(
+        CalendarEvent.user_id == user_id,
+        CalendarEvent.scheduled_date == scheduled_date,
+    )
+
+    if exclude_calendar_entry_id is not None:
+        query = query.filter(
+            CalendarEvent.id != exclude_calendar_entry_id
+        )
+
+    for other in query.all():
+        other_start = minutes_from_time(
+            getattr(other, "attendance_start_time", None)
+        )
+        other_end = minutes_from_time(
+            getattr(other, "attendance_end_time", None)
+        )
+
+        if other_start is None or other_end is None:
+            continue
+
+        no_conflict = (
+            end_minutes + BUFFER_MINUTES <= other_start
+        ) or (
+            start_minutes >= other_end + BUFFER_MINUTES
+        )
+
+        if not no_conflict:
+            return other
+
+    return None
