@@ -1,0 +1,14 @@
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Flask-Mail
+PyMySQL
+Werkzeug
+SQLAlchemy
+pandas
+openpyxl
+requests
+playwright
+scikit-learn
+python-dotenv
+google-genai

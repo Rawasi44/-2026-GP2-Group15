@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  /* Page-specific: not part of the shared auth component set in style.css */
+  .forgot-password {
+    text-align: right;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .forgot-password a {
+    font-size: 0.9rem;
+    color: var(--accent-dark);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .forgot-password a:hover {
+    text-decoration: underline;
+  }
+
+  /* Flash message states */
+  .auth-flash-success {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success-border);
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .auth-flash-warning {
+    background: #fff7df;
+    color: #8a641f;
+    border: 1px solid #e5cf91;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .auth-flash-info {
+    background: #eef4f7;
+    color: #385b68;
+    border: 1px solid #c8d9df;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+</style>
+
+<div class="auth-page hide-auth-buttons">
+  <div class="login-card">
+    <h2 class="login-title">Login</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% set category_lower = category|lower %}
+          {% set message_lower = message|lower %}
+
+          {% if category_lower == 'success'
+                or 'successfully' in message_lower
+                or 'successful' in message_lower %}
+            <div class="auth-flash-success">
+              {{ message }}
+            </div>
+
+          {% elif category_lower == 'warning' %}
+            <div class="auth-flash-warning">
+              {{ message }}
+            </div>
+
+          {% elif category_lower == 'info' %}
+            <div class="auth-flash-info">
+              {{ message }}
+            </div>
+
+          {% else %}
+            <div class="auth-flash">
+              {{ message }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <input
+        type="email"
+        name="email"
+        class="login-input"
+        placeholder="Email"
+        required
+      >
+
+      <input
+        type="password"
+        name="password"
+        class="login-input"
+        placeholder="Password"
+        required
+      >
+
+      <!-- Forgot Password -->
+      <div class="forgot-password">
+        <a href="{{ url_for('auth.forgot_password') }}">
+          Forgot Password?
+        </a>
+      </div>
+
+      <button type="submit" class="login-btn-main">
+        Login
+      </button>
+    </form>
+
+    <p class="signup-question">
+      Are you a new user?
+      <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

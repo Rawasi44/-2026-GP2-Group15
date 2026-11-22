@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros with context %}
+
+{% block title %}My Favorites | AFAQ{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .activity-hero {
+    position: relative;
+    background: var(--ink);
+    padding: 64px 0 52px;
+    overflow: hidden;
+  }
+
+  .activity-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("{{ url_for('static', filename='images/texture-grid.svg') }}");
+    background-repeat: repeat;
+    background-size: 64px 64px;
+  }
+
+  .activity-hero-inner {
+    position: relative;
+  }
+
+  .activity-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: var(--text-on-ink);
+    margin: 16px 0 10px;
+    font-weight: 800;
+  }
+
+  .activity-hero p {
+    max-width: 560px;
+    color: var(--text-on-ink-soft);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .activity-empty {
+    text-align: center;
+    margin-top: 10px;
+    padding: 60px 40px;
+    color: var(--text-soft);
+    font-size: 1.05rem;
+    background: var(--card);
+    border-radius: var(--radius-xl);
+  }
+
+  .activity-empty a {
+    color: var(--accent-dark);
+    font-weight: 700;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="activity-hero">
+  <div class="page-shell activity-hero-inner">
+    <span class="eyebrow-label on-ink">My AFAQ</span>
+    <h1>Your favorites</h1>
+    <p>Events you've saved so they're easy to find again.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 44px;">
+  <div class="page-shell">
+    {% if favorites %}
+      <div class="events-grid">
+        {% for favorite in favorites %}
+          {{ macros.event_card(
+            favorite.event,
+            badge_text=favorite.event.category,
+            meta_text=favorite.event.start_date ~ ' \u00b7 ' ~ favorite.event.city,
+            is_favorited=True
+          ) }}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="activity-empty">
+        You haven't saved any favorites yet. <a href="{{ url_for('events.events_page') }}">Browse events</a> and tap the heart icon to save one.
+      </p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

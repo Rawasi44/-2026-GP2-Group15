@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros with context %}
+
+{% block extra_styles %}
+<style>
+  .events-hero {
+    position: relative;
+    background: var(--ink);
+    padding: 80px 0 120px;
+    overflow: hidden;
+  }
+
+  .events-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("{{ url_for('static', filename='images/texture-grid.svg') }}");
+    background-repeat: repeat;
+    background-size: 64px 64px;
+  }
+
+  .events-hero-inner {
+    position: relative;
+  }
+
+  .events-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    color: var(--text-on-ink);
+    max-width: 720px;
+    margin-bottom: 16px;
+    font-weight: 800;
+  }
+
+  .events-hero p {
+    max-width: 560px;
+    color: var(--text-on-ink-soft);
+    font-size: 1.04rem;
+    line-height: 1.8;
+  }
+
+  .filters-box {
+    position: relative;
+    margin: -64px 0 44px;
+    padding: 22px;
+    background: var(--card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .filters-form {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr auto;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .filters-form input,
+  .filters-form select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    outline: none;
+  }
+
+  .filters-form input:focus,
+  .filters-form select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .filter-btn {
+    padding: 13px 26px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--text-on-ink);
+    cursor: pointer;
+    background: var(--ink);
+    transition: 0.2s ease;
+  }
+
+  .filter-btn:hover {
+    background: var(--accent);
+    color: var(--text-on-accent);
+  }
+
+  .clear-link {
+    display: inline-block;
+    margin-top: 14px;
+    color: var(--accent-dark);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .clear-link:hover {
+    text-decoration: underline;
+  }
+
+  .no-events {
+    text-align: center;
+    margin-top: 20px;
+    padding: 60px 40px;
+    color: var(--text-soft);
+    font-size: 1.05rem;
+    background: var(--card);
+    border-radius: var(--radius-xl);
+  }
+
+  @media (max-width: 900px) {
+    .filters-form {
+      grid-template-columns: 1fr;
+    }
+
+    .filters-box {
+      margin-top: -40px;
+    }
+  }
+</style>
+{% endblock %}
+
+
+{% block title %}All Events - AFAQ{% endblock %}
+
+{% block content %}
+<section class="events-hero">
+  <div class="page-shell events-hero-inner">
+    <span class="eyebrow-label on-ink">AFAQ &bull; Riyadh events</span>
+    <h1 style="margin-top: 20px;">Discover experiences in Riyadh</h1>
+    <p>
+      Explore curated events, filter by category and date, and find experiences that match your interests.
+    </p>
+  </div>
+</section>
+
+<section class="section" style="padding-top: 0;">
+  <div class="page-shell">
+    <div class="filters-box">
+      <form method="GET" action="/events" class="filters-form">
+
+        <!-- Search -->
+        <input type="text" name="search" placeholder="Search events..."
+               value="{{ selected_search }}">
+
+        <!-- Category -->
+        <select name="category">
+          <option value="">All Categories</option>
+          {% for category in categories %}
+            <option value="{{ category }}"
+              {% if selected_category == category %}selected{% endif %}>
+              {{ category }}
+            </option>
+          {% endfor %}
+        </select>
+
+        <!-- Date -->
+        <select name="date_filter">
+          <option value="">All Dates</option>
+          <option value="today" {% if selected_date_filter == "today" %}selected{% endif %}>
+            Available Today
+          </option>
+          <option value="tomorrow" {% if selected_date_filter == "tomorrow" %}selected{% endif %}>
+            Available Tomorrow
+          </option>
+          <option value="this_week" {% if selected_date_filter == "this_week" %}selected{% endif %}>
+            Available This Week
+          </option>
+        </select>
+
+        <button type="submit" class="filter-btn">Apply</button>
+
+      </form>
+      <a href="{{ url_for('events.events_page') }}" class="clear-link">Clear filters</a>
+    </div>
+
+    {% if events %}
+      <div class="events-grid">
+        {% for event in events %}
+          {{ macros.event_card(
+            event,
+            badge_text=event.category,
+            meta_text=event.start_date ~ ' \u00b7 ' ~ event.city,
+            avg_rating=(event_ratings[event.id].avg if event_ratings and event.id in event_ratings else None),
+            is_favorited=(event.id in favorited_event_ids)
+          ) }}
+        {% endfor %}
+      </div>
+     {% else %}
+       <p class="no-events">No events found. Try adjusting your search or filters.</p>
+     {% endif %}
+
+  </div>
+</section>
+{% endblock %}

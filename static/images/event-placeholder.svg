@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="Event image unavailable">
+  <defs>
+    <linearGradient id="afaqPlaceholderGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f2430"/>
+      <stop offset="100%" stop-color="#3a4256"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#afaqPlaceholderGrad)"/>
+  <g fill="#c9ccd6" opacity="0.85">
+    <rect x="220" y="320" width="160" height="120" rx="10" fill="none" stroke="#c9ccd6" stroke-width="6"/>
+    <circle cx="260" cy="356" r="14" fill="#c9ccd6"/>
+    <path d="M232 428 L276 384 L312 412 L348 368 L368 428 Z" fill="#c9ccd6"/>
+  </g>
+  <text x="300" y="492" font-family="Arial, sans-serif" font-size="26" fill="#e6e8ee" text-anchor="middle">AFAQ</text>
+  <text x="300" y="522" font-family="Arial, sans-serif" font-size="16" fill="#aeb2bf" text-anchor="middle">Image unavailable</text>
+</svg>

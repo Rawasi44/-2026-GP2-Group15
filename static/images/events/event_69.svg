@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#2f3d38"/>
+      <stop offset="100%" stop-color="#1f1d1a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="82%" cy="18%" r="70%">
+      <stop offset="0%" stop-color="#b8925a" stop-opacity=".52"/>
+      <stop offset="100%" stop-color="#b8925a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1000" height="650" fill="url(#bg)"/>
+  <rect width="1000" height="650" fill="url(#glow)"/>
+  <circle cx="820" cy="155" r="118" fill="none" stroke="#b8925a" stroke-width="5" opacity=".75"/>
+  <circle cx="820" cy="155" r="78" fill="none" stroke="#b8925a" stroke-width="2" opacity=".45"/>
+  <circle cx="820" cy="155" r="28" fill="#b8925a" opacity=".75"/>
+  <text x="64" y="100" fill="#b8925a" font-family="Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="5">
+    AFAQ - RIYADH EVENTS
+  </text>
+  <text x="64" y="250" fill="#f6f1e6" font-family="Arial, sans-serif" font-size="42" font-weight="700">Apply for Japan</text><text x="64" y="312" fill="#f6f1e6" font-family="Arial, sans-serif" font-size="42" font-weight="700">International MANGA Award</text>
+  <rect x="64" y="500" width="350" height="2" fill="#b8925a" opacity=".8"/>
+  <text x="64" y="548" fill="#d9d1c5" font-family="Arial, sans-serif" font-size="24">Culture &amp; Community</text>
+  <text x="64" y="590" fill="#9e9589" font-family="Arial, sans-serif" font-size="18">
+    Local event visual - not an official event photo
+  </text>
+</svg>

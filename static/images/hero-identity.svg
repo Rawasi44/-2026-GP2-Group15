@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="none">
+  <circle cx="480" cy="460" r="90" stroke="#B8925A" stroke-opacity="0.9" stroke-width="1.5"/>
+  <circle cx="480" cy="460" r="170" stroke="#B8925A" stroke-opacity="0.6" stroke-width="1.5"/>
+  <circle cx="480" cy="460" r="250" stroke="#B8925A" stroke-opacity="0.38" stroke-width="1.5"/>
+  <circle cx="480" cy="460" r="330" stroke="#B8925A" stroke-opacity="0.22" stroke-width="1.5"/>
+  <circle cx="480" cy="460" r="410" stroke="#F6F1E6" stroke-opacity="0.14" stroke-width="1.5"/>
+
+  <circle cx="480" cy="460" r="7" fill="#F6F1E6"/>
+  <circle cx="480" cy="460" r="14" stroke="#F6F1E6" stroke-opacity="0.5" stroke-width="1.5"/>
+
+  <circle cx="392" cy="392" r="6" fill="#B8925A"/>
+  <circle cx="560" cy="330" r="5" fill="#B8925A"/>
+  <circle cx="300" cy="470" r="5" fill="#F6F1E6"/>
+  <circle cx="470" cy="600" r="6" fill="#B8925A"/>
+  <circle cx="610" cy="470" r="4" fill="#F6F1E6"/>
+  <circle cx="230" cy="330" r="4" fill="#F6F1E6" fill-opacity="0.8"/>
+  <circle cx="600" cy="580" r="4" fill="#F6F1E6" fill-opacity="0.7"/>
+  <circle cx="360" cy="560" r="4" fill="#B8925A" fill-opacity="0.8"/>
+
+  <line x1="480" y1="460" x2="392" y2="392" stroke="#F6F1E6" stroke-opacity="0.3" stroke-width="1"/>
+  <line x1="480" y1="460" x2="470" y2="600" stroke="#F6F1E6" stroke-opacity="0.3" stroke-width="1"/>
+  <line x1="480" y1="460" x2="560" y2="330" stroke="#F6F1E6" stroke-opacity="0.3" stroke-width="1"/>
+</svg>

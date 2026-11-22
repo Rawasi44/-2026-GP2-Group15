@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | AFAQ{% endblock %}
+
+{% block extra_styles %}
+<style>
+  /* Matches the public pages: dark ink hero with the grid texture,
+     photo-first event cards, same palette and display font. */
+  .admin-hero {
+    position: relative;
+    background: var(--ink);
+    padding: 58px 0 54px;
+    overflow: hidden;
+  }
+  .admin-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("{{ url_for('static', filename='images/texture-grid.svg') }}");
+    background-repeat: repeat;
+    background-size: 64px 64px;
+    opacity: .35;
+  }
+  .admin-hero-inner { position: relative; }
+  .admin-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+    color: var(--text-on-ink);
+    font-weight: 800;
+    margin: 14px 0 10px;
+  }
+  .admin-hero p { color: var(--text-on-ink-soft); font-size: 1.02rem; }
+
+  .admin-section { padding: 44px 0 80px; }
+
+  .add-event-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: var(--ink);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 26px 32px;
+    margin: -78px 0 48px;
+    position: relative;
+  }
+  .add-event-card-left { display: flex; align-items: center; gap: 18px; }
+  .add-event-icon {
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    background: var(--accent);
+    color: var(--text-on-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; font-weight: 300; flex-shrink: 0;
+  }
+  .add-event-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--text-on-ink);
+    margin-bottom: 4px;
+  }
+  .add-event-card p { color: var(--text-on-ink-soft); font-size: .95rem; margin: 0; }
+
+  .events-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+  }
+  .events-section-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    letter-spacing: -.5px;
+    color: var(--text-main);
+  }
+  .event-count-badge {
+    display: inline-flex;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--text-soft);
+    font-size: .88rem;
+    font-weight: 700;
+  }
+
+  .admin-events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 24px;
+    background: var(--bg-card);
+    border: 1px dashed var(--accent-soft);
+    border-radius: var(--radius-lg);
+    color: var(--text-soft);
+  }
+  .empty-state span { font-size: 2.4rem; display: block; margin-bottom: 14px; }
+
+  .flash-banner {
+    background: #f0f9f0;
+    border: 1px solid #b8d8b8;
+    border-radius: 14px;
+    padding: 14px 20px;
+    color: #3a6b3a;
+    margin-bottom: 28px;
+  }
+
+  /* Event card: same photo-first look as the public site, with the
+     admin actions in a strip underneath. */
+  .admin-event-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--ink);
+    box-shadow: var(--shadow);
+  }
+  .admin-event-photo {
+    position: relative;
+    aspect-ratio: 4 / 3.4;
+    background: var(--ink-soft);
+  }
+  .admin-event-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .admin-event-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(23,21,18,.05) 0%, rgba(23,21,18,.15) 45%, rgba(23,21,18,.92) 100%);
+  }
+  .admin-event-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(245,242,235,.92);
+    color: var(--ink);
+    font-size: .72rem;
+    font-weight: 700;
+  }
+  .admin-event-info {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 18px 18px 16px;
+  }
+  .admin-event-info h3 {
+    font-family: var(--font-display);
+    font-size: 1.12rem;
+    font-weight: 700;
+    line-height: 1.28;
+    color: var(--text-on-ink);
+    margin-bottom: 6px;
+  }
+  .admin-event-meta { font-size: .8rem; color: var(--text-on-ink-soft); }
+
+  .admin-actions {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px 16px;
+    background: var(--ink);
+  }
+  .admin-actions form { margin: 0; flex: 1; }
+  .admin-actions .btn-edit,
+  .admin-actions .btn-delete {
+    width: 100%;
+    height: 42px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+  }
+  .admin-actions .btn-edit {
+    flex: 1;
+    border: 1.5px solid var(--border-on-ink);
+    background: transparent;
+    color: var(--text-on-ink);
+  }
+  .admin-actions .btn-edit:hover { border-color: var(--accent); color: var(--accent); }
+  .admin-actions .btn-delete {
+    border: 1.5px solid var(--accent);
+    background: var(--accent);
+    color: var(--text-on-accent);
+  }
+  .admin-actions .btn-delete:hover { filter: brightness(.92); }
+
+  @media (max-width: 1000px) {
+    .admin-events-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .admin-events-grid { grid-template-columns: 1fr; }
+    .add-event-card { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-hero">
+  <div class="page-shell admin-hero-inner">
+    <span class="eyebrow-label on-ink">Admin</span>
+    <h1>Admin Dashboard</h1>
+    <p>Welcome back, {{ current_user.fullname }}. Manage your platform below.</p>
+  </div>
+</div>
+
+<section class="admin-section">
+  <div class="page-shell">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash-banner">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Add Event card -->
+    <div class="add-event-card">
+      <div class="add-event-card-left">
+        <div class="add-event-icon">+</div>
+        <div>
+          <h3>Add New Event</h3>
+          <p>Publish a new event directly to the AFAQ platform.</p>
+        </div>
+      </div>
+      <a href="{{ url_for('admin.add_event') }}" class="solid-btn">Add Event</a>
+    </div>
+
+    <!-- Admin events list -->
+    <div class="events-section-header">
+      <h2>Events Added by Admin</h2>
+      <span class="event-count-badge">{{ events|length }} event{{ 's' if events|length != 1 }}</span>
+    </div>
+
+    <div class="admin-events-grid">
+      {% if events %}
+        {% for event in events %}
+        <article class="admin-event-card">
+          <div class="admin-event-photo">
+            <img
+              src="{{ event.image if event.image else url_for('static', filename='images/event-placeholder.svg') }}"
+              alt="{{ event.title }}"
+              loading="lazy"
+              onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/event-placeholder.svg') }}';"
+            >
+            <div class="admin-event-scrim"></div>
+            <span class="admin-event-badge">{{ event.category }}</span>
+            <div class="admin-event-info">
+              <h3>{{ event.title }}</h3>
+              <span class="admin-event-meta">{{ event.start_date }} &middot; {{ event.city }}{% if event.price %} &middot; {{ event.price }}{% endif %}</span>
+            </div>
+          </div>
+
+          <div class="admin-actions">
+            <a href="{{ url_for('admin.edit_event', event_id=event.id) }}" class="btn-edit">Edit</a>
+
+            <form method="POST" action="{{ url_for('admin.delete_event', event_id=event.id) }}">
+              <button type="submit" class="btn-delete"
+                onclick="return confirm('Are you sure you want to delete this event?');">
+                Delete
+              </button>
+            </form>
+          </div>
+        </article>
+        {% endfor %}
+
+      {% else %}
+        <div class="empty-state">
+          <span>📋</span>
+          <p>No admin events yet.<br>Use the button above to add your first event.</p>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+ 
+</section>
+
+{% endblock %}

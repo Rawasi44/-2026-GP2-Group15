@@ -1,0 +1,32 @@
+{# Floating AFAQ chatbot widget. Included once from base.html, right
+   before </body>. Scoped entirely under .afaq-chat-* classes so it can
+   never collide with any other page's CSS (public or admin). #}
+<div id="afaq-chat-root" class="afaq-chat-root">
+  <button id="afaq-chat-bubble" class="afaq-chat-bubble" type="button" aria-label="Open AFAQ assistant" aria-expanded="false">
+    <span aria-hidden="true">&#128172;</span>
+  </button>
+
+  <div id="afaq-chat-panel" class="afaq-chat-panel" hidden>
+    <div class="afaq-chat-header">
+      <span>AFAQ Assistant</span>
+      <button id="afaq-chat-close" class="afaq-chat-close" type="button" aria-label="Close assistant">&times;</button>
+    </div>
+
+    <div id="afaq-chat-messages" class="afaq-chat-messages" aria-live="polite"></div>
+
+    <div id="afaq-chat-loading" class="afaq-chat-loading" hidden>AFAQ is typing&hellip;</div>
+    <div id="afaq-chat-error" class="afaq-chat-error" hidden></div>
+
+    <form id="afaq-chat-form" class="afaq-chat-form">
+      <textarea
+        id="afaq-chat-input"
+        class="afaq-chat-input"
+        placeholder="Ask about Riyadh events&hellip;"
+        autocomplete="off"
+        maxlength="1000"
+        rows="1"
+      ></textarea>
+      <button type="submit" class="afaq-chat-send" aria-label="Send message">&rarr;</button>
+    </form>
+  </div>
+</div>
