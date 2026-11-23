@@ -22,9 +22,10 @@
 
   /* Flash message states */
   .auth-flash-success {
-    background: var(--success-bg);
-    color: var(--success);
-    border: 1px solid var(--success-border);
+    background: #1f8a52;
+    color: #fff;
+    font-weight: 700;
+    border: 1px solid #1f8a52;
     padding: 11px 14px;
     border-radius: var(--radius-sm);
     margin-bottom: 16px;
@@ -71,7 +72,7 @@
           {% if category_lower == 'success'
                 or 'successfully' in message_lower
                 or 'successful' in message_lower %}
-            <div class="auth-flash-success">
+            <div class="auth-flash-success afaq-autohide">
               {{ message }}
             </div>
 
