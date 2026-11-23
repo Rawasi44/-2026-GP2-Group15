@@ -71,6 +71,7 @@ def build_schedule(
     preferred,
     max_per_day,
     today,
+    exclude_ids=None,
 ):
     """
     Validate the user's planning request and generate a Smart Schedule.
@@ -91,6 +92,7 @@ def build_schedule(
         days,
         preferred_time=preferred,
         max_per_day=validated_count,
+        exclude_ids=exclude_ids,
     )
 
     schedule_strategy, schedule = summarize_schedule_strategy(
@@ -99,7 +101,26 @@ def build_schedule(
         validated_count,
     )
 
-    return days, validated_count, schedule, schedule_strategy
+    # A real schedule shouldn't hand back every single date the user
+    # ticked, including the ones with nothing on them -- that reads as
+    # "here are your dates back" rather than an actual curated plan.
+    # Days that already have something worth telling the user about
+    # (new suggestions, OR events they'd already saved there) stay in
+    # the visible schedule; genuinely empty days are dropped from the
+    # day-by-day list and folded into one short summary line instead.
+    visible_schedule = [
+        day
+        for day in schedule
+        if day["items"] or day.get("existing_count")
+    ]
+
+    skipped_days = [
+        day["date"]
+        for day in schedule
+        if not day["items"] and not day.get("existing_count")
+    ]
+
+    return days, validated_count, visible_schedule, schedule_strategy, skipped_days
 
 
 def store_proposed_schedule(schedule):
@@ -142,6 +163,7 @@ def store_proposed_schedule(schedule):
 def planner_page():
     schedule = None
     schedule_strategy = None
+    skipped_days = []
     selected = []
     preferred = "any"
     max_per_day = "2"
@@ -163,17 +185,28 @@ def planner_page():
             "2",
         )
 
+        # Sent only by "Regenerate": the events from the schedule the
+        # user just rejected, so different ones are tried first.
+        exclude_ids = []
+        for raw_id in request.form.getlist("exclude_ids"):
+            try:
+                exclude_ids.append(int(raw_id))
+            except (TypeError, ValueError):
+                pass
+
         try:
             (
                 days,
                 validated_count,
                 schedule,
                 schedule_strategy,
+                skipped_days,
             ) = build_schedule(
                 selected,
                 preferred,
                 max_per_day,
                 today,
+                exclude_ids=exclude_ids,
             )
 
         except ValueError as exc:
@@ -205,6 +238,9 @@ def planner_page():
                     if validated_count is None
                     else str(validated_count)
                 ),
+                # So a regenerated schedule comes back the same way
+                # when the page is restored.
+                "exclude_ids": exclude_ids,
             }
 
             max_per_day = (
@@ -223,6 +259,16 @@ def planner_page():
                     "Try other dates or choose 'Any time'.",
                     "warning",
                 )
+
+            # Post/Redirect/Get: the schedule now lives at a normal URL
+            # (?restore=1), so going to an event page and pressing Back
+            # brings the same schedule back instead of an empty form.
+            return redirect(
+                url_for(
+                    "smart_schedule.planner_page",
+                    restore=1,
+                )
+            )
 
     # ---------------------------------------------------------
     # Restore the most recently generated suggestions
@@ -255,16 +301,19 @@ def planner_page():
                     validated_count,
                     schedule,
                     schedule_strategy,
+                    skipped_days,
                 ) = build_schedule(
                     selected,
                     preferred,
                     max_per_day,
                     today,
+                    exclude_ids=last_request.get("exclude_ids"),
                 )
 
             except ValueError:
                 schedule = None
                 schedule_strategy = None
+                skipped_days = []
 
             else:
                 max_per_day = (
@@ -281,6 +330,10 @@ def planner_page():
         "smart_schedule.html",
         schedule=schedule,
         schedule_strategy=schedule_strategy,
+        skipped_day_labels=[
+            day.strftime("%a %d %b")
+            for day in skipped_days
+        ],
         selected_dates=selected,
         preferred_time=preferred,
         max_per_day=max_per_day,
