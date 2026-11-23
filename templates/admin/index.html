@@ -108,11 +108,12 @@
   .empty-state span { font-size: 2.4rem; display: block; margin-bottom: 14px; }
 
   .flash-banner {
-    background: #f0f9f0;
-    border: 1px solid #b8d8b8;
+    background: #1f8a52;
+    border: 1px solid #1f8a52;
     border-radius: 14px;
     padding: 14px 20px;
-    color: #3a6b3a;
+    color: #fff;
+    font-weight: 700;
     margin-bottom: 28px;
   }
 
@@ -230,7 +231,7 @@
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         {% for msg in messages %}
-          <div class="flash-banner">{{ msg }}</div>
+          <div class="flash-banner afaq-autohide">{{ msg }}</div>
         {% endfor %}
       {% endif %}
     {% endwith %}
@@ -275,9 +276,9 @@
           <div class="admin-actions">
             <a href="{{ url_for('admin.edit_event', event_id=event.id) }}" class="btn-edit">Edit</a>
 
-            <form method="POST" action="{{ url_for('admin.delete_event', event_id=event.id) }}">
-              <button type="submit" class="btn-delete"
-                onclick="return confirm('Are you sure you want to delete this event?');">
+            <form method="POST" action="{{ url_for('admin.delete_event', event_id=event.id) }}"
+                  data-confirm="Are you sure you want to delete this event?">
+              <button type="submit" class="btn-delete">
                 Delete
               </button>
             </form>
