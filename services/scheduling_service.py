@@ -575,9 +575,15 @@ def generate_smart_schedule(
     selected_days,
     preferred_time="any",
     max_per_day=2,
+    exclude_ids=None,
 ):
     """
     Generate personalized Smart Schedule suggestions.
+
+    exclude_ids:
+        event ids to try LAST (used by "Regenerate": the user didn't
+        like the previous suggestions, so other events are offered
+        first; the old ones only fill in if nothing else fits).
 
     This function does NOT save anything to the database.
 
@@ -681,6 +687,13 @@ def generate_smart_schedule(
             not in existing_ids
         )
     ]
+
+    if exclude_ids:
+        avoid = set(exclude_ids)
+        eligible = (
+            [event for event in eligible if event.id not in avoid]
+            + [event for event in eligible if event.id in avoid]
+        )
 
     # Phase 1.1/1.4: "why was this event recommended" -- grounded in
     # the same real signals (ratings/favorites/calendar/explicit
@@ -1015,7 +1028,13 @@ def summarize_schedule_strategy(schedule, preferred_time, max_per_day):
 
     for day in schedule:
         if not day["items"]:
-            day["day_summary"] = None
+            existing_count = day.get("existing_count") or 0
+            day["day_summary"] = (
+                f"Already has {existing_count} event{'s' if existing_count != 1 else ''} "
+                f"saved for this day -- no further matches right now."
+                if existing_count
+                else None
+            )
             continue
 
         day_categories = Counter(
