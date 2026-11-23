@@ -38,7 +38,7 @@
 
 
 
-        <div class="flash flash-{{ category }}">{{ message }}</div>
+        <div class="flash flash-{{ category }}{% if category == 'success' %} afaq-autohide{% endif %}">{{ message }}</div>
 
 
 
@@ -97,6 +97,8 @@
 
 
   <div class="details-hero-content page-shell">
+
+    <a class="page-back-btn" href="{{ url_for('events.events_page') }}" data-back>&larr; Back</a>
 
 
 
@@ -245,7 +247,7 @@
             <form
               method="POST"
               action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
-              onsubmit="return confirm('Are you sure you want to remove this event from your personal calendar?');"
+              data-confirm="Are you sure you want to remove this event from your personal calendar?"
             >
               <input type="hidden" name="next" value="{{ request.path }}">
 
@@ -1010,7 +1012,7 @@
 
 
 
-  .flash-success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+  .flash-success { background: #1f8a52; color: #fff; font-weight: 700; border: 1px solid #1f8a52; }
 
 
 
