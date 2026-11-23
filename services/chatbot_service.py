@@ -147,8 +147,14 @@ def get_or_create_conversation(conversation_id, user_id):
 
     if conversation_id and conversation_id in _conversations:
         convo = _conversations[conversation_id]
-        convo["last_active"] = time.time()
-        return conversation_id, convo
+        owner = convo.get("user_id")
+        # A conversation that belonged to a signed-in account is never
+        # reused by someone else or by a guest after logging out. (A guest
+        # who logs in mid-conversation keeps theirs -- owner is None.)
+        if owner is None or owner == user_id:
+            convo["last_active"] = time.time()
+            return conversation_id, convo
+        _conversations.pop(conversation_id, None)
 
     new_id = str(uuid.uuid4())
     convo = _new_conversation(user_id)
@@ -380,6 +386,11 @@ def tool_propose_preferences(conversation, raw_text):
     subsequent, authenticated call to /chatbot/preferences/confirm can
     turn this into a saved UserPreference row.
     """
+    if not conversation.get("user_id"):
+        # Guests have no account to save preferences to.
+        conversation["needs_account"] = True
+        return {"proposed": [], "reason": "not_authenticated"}
+
     categories = sorted(match_categories(raw_text))
     if not categories:
         return {"proposed": []}
@@ -404,6 +415,7 @@ def tool_propose_save_event(conversation, event_id):
         return {"proposed": False, "reason": "invalid_event_id"}
 
     if not conversation.get("user_id"):
+        conversation["needs_account"] = True
         return {"proposed": False, "reason": "not_authenticated"}
 
     event = Event.query.get(event_id)
@@ -540,6 +552,8 @@ Rules you must always follow:
   tell them to go browse the app themselves when they clearly asked you to save that event. Then
   ask them to confirm. Never claim the event is already saved -- only the user's follow-up
   confirmation actually saves it.
+- If a tool result says reason "not_authenticated", the user is a guest with no account: tell
+  them they need an account (sign up or log in) to save favorites or preferences.
 - Reply in whichever language the user's latest message is written in (English or Arabic). Keep
   Arabic replies in Arabic script with correct grammar; do not mix scripts within one reply unless
   quoting an event title that is itself in the other language.
@@ -601,6 +615,10 @@ def _fallback_reply(lang, reason):
             "en": "The assistant is temporarily unavailable. Please try again in a moment.",
             "ar": "المساعد غير متاح حالياً. حاول مرة أخرى بعد قليل.",
         },
+        "needs_account": {
+            "en": "You don't have an account yet, so I can't save that for you. Sign up or log in, then ask me again.",
+            "ar": "ما عندك حساب بعد، فما أقدر أحفظ هذا لك. سجّل حساب أو سجّل دخولك، وبعدها اطلب مني مرة ثانية.",
+        },
         "rate_limited": {
             "en": "You've sent a lot of messages in a short time. Please wait a bit before continuing.",
             "ar": "لقد أرسلت رسائل كثيرة في وقت قصير. الرجاء الانتظار قليلاً قبل المواصلة.",
@@ -654,6 +672,7 @@ def handle_message(conversation_id, user, message):
     system_instruction = SYSTEM_INSTRUCTION_TEMPLATE.format(today=riyadh_today)
 
     convo["history"].append({"role": "user", "text": message})
+    convo["needs_account"] = False
 
     contents = []
     for turn in convo["history"]:
@@ -713,6 +732,13 @@ def handle_message(conversation_id, user, message):
         # model, or an unexpected response shape all land here. Never
         # fabricate a reply -- fail to a clear, generic message instead.
         reply_text = _fallback_reply(lang, "unavailable")
+
+    # A guest asked to save a favorite/preference: say so plainly and the
+    # same way every time, instead of leaving it to the model's wording.
+    if convo.get("needs_account"):
+        reply_text = _fallback_reply(lang, "needs_account")
+        convo["pending_preferences"] = None
+        convo["pending_favorite"] = None
 
     convo["history"].append({"role": "model", "text": reply_text})
 
