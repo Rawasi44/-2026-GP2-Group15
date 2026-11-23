@@ -132,6 +132,9 @@ def login():
 @login_required
 def logout():
     logout_user()
+    # The assistant conversation belongs to the account that had it --
+    # don't carry it over to whoever uses this browser next.
+    session.pop('chat_conversation_id', None)
     return redirect(url_for('events.home'))
 
 
