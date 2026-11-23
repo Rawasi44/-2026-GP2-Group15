@@ -907,6 +907,16 @@ a.event-card:hover .event-card-arrow {
   line-height: 1;
 }
 
+.afaq-chat-notice {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-soft);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
 .afaq-chat-messages {
   flex: 1 1 auto;
   min-height: 0;
@@ -1089,6 +1099,35 @@ a.event-card:hover .event-card-arrow {
   transform: translate(-50%, 0);
 }
 
+/* Server-rendered green success messages, shown as the same floating
+   toast as the favorites one (see static/js/flash.js). The doubled class
+   beats each page's own inline flash styling. */
+.afaq-flash-toast.afaq-flash-toast {
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 12px);
+  z-index: 2000;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-align: center;
+  color: #fff;
+  background: #1f8a52;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.afaq-flash-toast.afaq-flash-toast-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
 .afaq-toast-warning {
   background: #b5872b;
 }
@@ -1096,4 +1135,98 @@ a.event-card:hover .event-card-arrow {
 .fav-btn-loading {
   opacity: 0.6;
   cursor: wait;
+}
+
+
+/* ===========================================================
+   AFAQ confirm dialog (static/js/flash.js) -- replaces the
+   browser's own confirm() popup.
+   =========================================================== */
+.afaq-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(23, 21, 18, 0.55);
+}
+
+.afaq-modal {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lift, 0 20px 50px rgba(0, 0, 0, 0.3));
+  padding: 26px 26px 22px;
+}
+
+.afaq-modal-text {
+  margin: 0 0 22px;
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.afaq-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.afaq-modal-actions button {
+  min-height: 42px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.afaq-modal-cancel {
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-main);
+}
+
+.afaq-modal-yes {
+  border: 1.5px solid var(--accent);
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+/* Flash messages on pages without their own styling (e.g. calendar).
+   Green success ones become toasts via static/js/flash.js. */
+.flash {
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+.flash-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+.flash-warning { background: #fdf3e2; color: #8a5a1f; border: 1px solid #edd6a4; }
+
+/* In-page Back button (see static/js/flash.js, [data-back]). */
+.page-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 242, 235, 0.35);
+  background: rgba(23, 21, 18, 0.45);
+  color: var(--text-on-ink);
+  font-size: 0.88rem;
+  font-weight: 700;
+  backdrop-filter: blur(3px);
+  transition: 0.2s ease;
+}
+
+.page-back-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text-on-accent);
 }
