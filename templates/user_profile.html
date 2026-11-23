@@ -169,9 +169,10 @@
   }
 
   .success-flash {
-    background: var(--success-bg);
-    color: var(--success);
-    border: 1px solid var(--success-border);
+    background: #1f8a52;
+    color: #fff;
+    font-weight: 700;
+    border: 1px solid #1f8a52;
   }
 
   .auth-flash ul {
@@ -377,7 +378,7 @@
 
           {% for message in messages %}
 
-            <div class="success-flash">
+            <div class="success-flash afaq-autohide">
               {{ message }}
             </div>
 
