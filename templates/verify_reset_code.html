@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Verify Reset Code | AFAQ{% endblock %}
+{% block title %}Verify Your Email | AFAQ{% endblock %}
 
 {% block content %}
 
@@ -16,38 +16,6 @@
     font-size: 0.92rem;
     text-align: center;
   }
-
-  .password-field-wrapper {
-    position: relative;
-  }
-
-  .password-field-wrapper .login-input {
-    padding-right: 48px;
-  }
-
-  .password-toggle {
-    position: absolute;
-    right: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    border: none;
-    background: transparent;
-    padding: 4px;
-    cursor: pointer;
-    color: #6f685f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .password-toggle:hover {
-    color: #b48d5b;
-  }
-
-  .password-toggle svg {
-    width: 20px;
-    height: 20px;
-  }
 </style>
 
 
@@ -56,12 +24,12 @@
   <div class="login-card">
 
     <h2 class="login-title">
-      Verify Code
+      Verify Your Email
     </h2>
 
     <p class="auth-note">
-      Enter the 4-digit code sent to your email,
-      then choose your new password.
+      Enter the 4-digit code we sent to your email
+      to activate your AFAQ account.
     </p>
 
 
@@ -99,7 +67,7 @@
     {% endwith %}
 
 
-    {# Validation errors #}
+    {# Verification errors #}
     {% if errors %}
 
       <div class="auth-flash">
@@ -127,7 +95,7 @@
 
     <form
       method="POST"
-      action="{{ url_for('auth.verify_reset_password_code') }}"
+      action="{{ url_for('auth.verify_signup_code') }}"
     >
 
       <input
@@ -138,112 +106,30 @@
         maxlength="4"
         inputmode="numeric"
         pattern="[0-9]{4}"
-        autocomplete="one-time-code"
         required
       >
-
-
-      <div class="password-field-wrapper">
-
-        <input
-          id="reset-new-password"
-          type="password"
-          name="new_password"
-          class="login-input"
-          placeholder="New password"
-          autocomplete="new-password"
-          required
-        >
-
-        <button
-          type="button"
-          class="password-toggle"
-          data-target="reset-new-password"
-          aria-label="Show password"
-          title="Show password"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path
-              d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"
-            ></path>
-
-            <circle
-              cx="12"
-              cy="12"
-              r="3"
-            ></circle>
-          </svg>
-
-        </button>
-
-      </div>
-
-
-      <small class="field-hint">
-        At least 8 characters, with an uppercase letter,
-        a lowercase letter, a number, and a special character.
-      </small>
-
-
-      <div class="password-field-wrapper">
-
-        <input
-          id="reset-confirm-password"
-          type="password"
-          name="confirm_password"
-          class="login-input"
-          placeholder="Confirm new password"
-          autocomplete="new-password"
-          required
-        >
-
-        <button
-          type="button"
-          class="password-toggle"
-          data-target="reset-confirm-password"
-          aria-label="Show password"
-          title="Show password"
-        >
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path
-              d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12"
-            ></path>
-
-            <circle
-              cx="12"
-              cy="12"
-              r="3"
-            ></circle>
-          </svg>
-
-        </button>
-
-      </div>
-
 
       <button
         type="submit"
         class="login-btn-main"
       >
-        Reset Password
+        Verify Email
+      </button>
+
+    </form>
+
+
+    <form
+      method="POST"
+      action="{{ url_for('auth.resend_signup_code') }}"
+      class="resend-form"
+    >
+
+      <button
+        type="submit"
+        class="resend-btn"
+      >
+        Resend Code
       </button>
 
     </form>
@@ -251,8 +137,8 @@
 
     <p class="signup-question">
 
-      <a href="{{ url_for('auth.forgot_password') }}">
-        Send a new code
+      <a href="{{ url_for('auth.login') }}">
+        Back to login
       </a>
 
     </p>
@@ -260,69 +146,5 @@
   </div>
 
 </div>
-
-
-<script>
-  document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-      const buttons =
-        document.querySelectorAll(
-          ".password-toggle"
-        );
-
-      buttons.forEach(
-        function (button) {
-
-          button.addEventListener(
-            "click",
-            function () {
-
-              const targetId =
-                button.getAttribute(
-                  "data-target"
-                );
-
-              const input =
-                document.getElementById(
-                  targetId
-                );
-
-              if (!input) {
-                return;
-              }
-
-              const isHidden =
-                input.type === "password";
-
-              input.type =
-                isHidden
-                  ? "text"
-                  : "password";
-
-              button.setAttribute(
-                "aria-label",
-                isHidden
-                  ? "Hide password"
-                  : "Show password"
-              );
-
-              button.setAttribute(
-                "title",
-                isHidden
-                  ? "Hide password"
-                  : "Show password"
-              );
-
-            }
-          );
-
-        }
-      );
-
-    }
-  );
-</script>
 
 {% endblock %}
