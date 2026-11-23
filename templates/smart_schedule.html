@@ -587,8 +587,8 @@
   <div class="page-shell">
 
     {% with messages = get_flashed_messages(with_categories=true) %}
-      {% for category, message in messages %}
-        <p class="smart-flash" role="status">
+      {% for category, message in messages|unique %}
+        <p class="smart-flash{% if category == 'success' %} afaq-autohide{% endif %}" role="status">
           {{ message }}
         </p>
       {% endfor %}
@@ -1175,6 +1175,16 @@
     }
 
 
+    // Shown by AFAQ itself (floating toast from flash.js) instead of the
+    // browser's own alert() popup.
+    function notify(message) {
+      if (typeof window.afaqToast === 'function') {
+        window.afaqToast(message, 'warning');
+      } else {
+        alert(message);
+      }
+    }
+
     function existingDateValues() {
 
       return [
@@ -1433,7 +1443,7 @@
 
       if (!fromValue || !toValue) {
         if (!silent) {
-          alert('Please pick both a start and an end date for the range.');
+          notify('Please pick both a start and an end date for the range.');
         }
         return false;
       }
@@ -1443,7 +1453,7 @@
 
       if (end < start) {
         if (!silent) {
-          alert('The end date must be on or after the start date.');
+          notify('The end date must be on or after the start date.');
         }
         return false;
       }
@@ -1563,7 +1573,7 @@
 
           event.preventDefault();
 
-          alert(
+          notify(
             'Please choose at least one available date (use the range above, or add a day below).'
           );
 
@@ -1579,7 +1589,7 @@
 
           event.preventDefault();
 
-          alert(
+          notify(
             'Please choose different dates.'
           );
 
@@ -1774,6 +1784,18 @@
       if (event.target.id === "smart-regenerate") {
         const form = document.getElementById("smart-schedule-form");
         if (form) {
+          // Tell the server which events were just shown (kept or
+          // removed), so the new schedule tries different ones first.
+          form.querySelectorAll('input[name="exclude_ids"]').forEach(function (el) {
+            el.remove();
+          });
+          document.querySelectorAll("[data-smart-item]").forEach(function (el) {
+            const hidden = document.createElement("input");
+            hidden.type = "hidden";
+            hidden.name = "exclude_ids";
+            hidden.value = el.dataset.eventId;
+            form.appendChild(hidden);
+          });
           if (typeof form.requestSubmit === "function") {
             form.requestSubmit();
           } else {
