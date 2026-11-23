@@ -12,9 +12,74 @@
 
   if (!bubble || !panel || !form || !input) return;
 
+  // Every page change is a full reload, which wipes the DOM -- so the
+  // conversation (and whether the panel was open) is kept in
+  // sessionStorage and rebuilt on load. It lasts for the browser tab's
+  // session and is never sent anywhere.
+  var HISTORY_KEY = "afaq-chat-history";
+  var OPEN_KEY = "afaq-chat-open";
+  var MAX_SAVED = 60;
+
+  // The saved conversation belongs to whoever was signed in when it was
+  // written. If that is no longer the current user (logged out, or
+  // another account), start clean instead of showing their messages.
+  var USER_KEY = "afaq-chat-user";
+  (function dropOtherUsersChat() {
+    var root = document.getElementById("afaq-chat-root");
+    var current = root ? root.getAttribute("data-chat-user") : "guest";
+    try {
+      var saved = sessionStorage.getItem(USER_KEY);
+      // No saved owner (a conversation stored before this check existed)
+      // also counts as "not this user": we can't tell whose it is.
+      if (saved !== current) {
+        sessionStorage.removeItem(HISTORY_KEY);
+        sessionStorage.removeItem(OPEN_KEY);
+      }
+      sessionStorage.setItem(USER_KEY, current);
+    } catch (e) {}
+  })();
+
+  // Logging out wipes the saved conversation right away.
+  document.addEventListener("click", function (event) {
+    var link = event.target.closest && event.target.closest("a[href]");
+    if (link && /\/logout(\?|$)/.test(link.getAttribute("href") || "")) {
+      try {
+        sessionStorage.removeItem(HISTORY_KEY);
+        sessionStorage.removeItem(OPEN_KEY);
+        sessionStorage.removeItem(USER_KEY);
+      } catch (e) {}
+    }
+  });
+
+  function loadHistory() {
+    try {
+      var raw = sessionStorage.getItem(HISTORY_KEY);
+      var parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveMessage(text, role, lang) {
+    try {
+      var history = loadHistory();
+      history.push({ text: text, role: role, lang: lang });
+      if (history.length > MAX_SAVED) history = history.slice(-MAX_SAVED);
+      sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (e) {}
+  }
+
+  function saveOpenState(isOpen) {
+    try {
+      sessionStorage.setItem(OPEN_KEY, isOpen ? "1" : "0");
+    } catch (e) {}
+  }
+
   function openPanel() {
     panel.hidden = false;
     bubble.setAttribute("aria-expanded", "true");
+    saveOpenState(true);
     input.focus();
     if (!messages.dataset.greeted) {
       addMessage("Hi! Ask me about events happening in Riyadh.", "assistant", "en");
@@ -25,6 +90,7 @@
   function closePanel() {
     panel.hidden = true;
     bubble.setAttribute("aria-expanded", "false");
+    saveOpenState(false);
   }
 
   bubble.addEventListener("click", function () {
@@ -102,7 +168,7 @@
     return html;
   }
 
-  function addMessage(text, role, lang) {
+  function addMessage(text, role, lang, skipSave) {
     var row = document.createElement("div");
     row.className = "afaq-chat-msg afaq-chat-msg-" + role;
     row.dir = lang === "ar" ? "rtl" : "ltr";
@@ -110,6 +176,7 @@
     row.innerHTML = renderInlineMarkdown(escaped);
     messages.appendChild(row);
     messages.scrollTop = messages.scrollHeight;
+    if (!skipSave) saveMessage(text, role, lang);
     return row;
   }
 
@@ -245,4 +312,30 @@
         errorBox.textContent = "Something went wrong. Please try again.";
       });
   });
+
+  // Rebuild the saved conversation (and reopen the panel if it was
+  // open) so moving between pages doesn't start the chat over.
+  (function restore() {
+    var history = loadHistory();
+    if (history.length) {
+      history.forEach(function (m) {
+        addMessage(m.text, m.role, m.lang, true);
+      });
+      messages.dataset.greeted = "true";
+    }
+    var wasOpen = false;
+    try {
+      wasOpen = sessionStorage.getItem(OPEN_KEY) === "1";
+    } catch (e) {}
+    if (wasOpen) {
+      panel.hidden = false;
+      bubble.setAttribute("aria-expanded", "true");
+      if (!history.length) {
+        addMessage("Hi! Ask me about events happening in Riyadh.", "assistant", "en");
+        messages.dataset.greeted = "true";
+      }
+      messages.scrollTop = messages.scrollHeight;
+    }
+  })();
 })();
+
