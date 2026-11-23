@@ -667,6 +667,12 @@
 <section class="calendar-section">
   <div class="page-shell">
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages|unique %}
+        <div class="flash flash-{{ category }}{% if category == 'success' %} afaq-autohide{% endif %}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
     <div class="calendar-card">
 
       <div class="calendar-toolbar">
@@ -779,7 +785,7 @@
                         method="POST"
                         action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
                         class="calendar-remove-form"
-                        onsubmit="return confirm('Are you sure you want to remove this event from your personal calendar?');"
+                        data-confirm="Are you sure you want to remove this event from your personal calendar?"
                       >
 
                         <input
@@ -891,7 +897,7 @@
                       <form
                         method="POST"
                         action="{{ url_for('calendar.toggle_calendar', event_id=event.id) }}"
-                        onsubmit="return confirm('Are you sure you want to remove this event from your personal calendar?');"
+                        data-confirm="Are you sure you want to remove this event from your personal calendar?"
                       >
 
                         <input
