@@ -44,7 +44,7 @@
       window.setTimeout(function () {
         toast.remove();
       }, 220);
-    }, 2600);
+    }, 4000);
   }
 
   function setButtonState(button, isFavorited) {
