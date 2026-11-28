@@ -1,6 +1,6 @@
 <div align="center">
 
-# ✨ AFAQ — Event Discovery Platform
+# AFAQ — Event Discovery Platform
 
 ### Discover, plan, and enjoy events in Riyadh, all in one place.
 
